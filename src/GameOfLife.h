@@ -5,7 +5,6 @@
 class Cell;
 class GameOfLife {
 public:
-	GameOfLife();
 	bool isAlive(const Cell& cell) const;
 	GameOfLife& withAlive(const Cell& cell);
 	GameOfLife tick() const;

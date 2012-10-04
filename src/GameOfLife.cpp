@@ -2,9 +2,6 @@
 #include "GameOfLife.h"
 
 using namespace std;
-GameOfLife::GameOfLife() {
-
-}
 
 bool GameOfLife::isAlive(const Cell& cell) const {
 	return aliveCells_.count(cell) > 0;
