@@ -6,6 +6,7 @@ endif
 #--- Inputs ----#
 COMPONENT_NAME = CodingExercises1
 CPPUTEST_HOME = cpputest
+CPPUTEST_WARNINGFLAGS =  -Wall
 
 CPPUTEST_USE_EXTENSIONS = Y
 CPP_PLATFORM = Gcc
