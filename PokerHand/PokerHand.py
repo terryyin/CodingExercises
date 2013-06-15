@@ -38,8 +38,8 @@ class PokerHand:
 import unittest
             
 class Hands:
-    HighCard = PokerHand("2H 3H 6H 7H 9D")
-    HighCardWithDifferentSuits = PokerHand("2H 3H 6D 7D 9D")
+    HighCard = PokerHand("2H 4H 6H 7H 9D")
+    HighCardWithDifferentSuits = PokerHand("2H 4H 6D 7D 9D")
     BiggerHighCard = PokerHand("2H 3H 7H 8H 9D")
     OnePair = PokerHand("2H 2H 6H 7H 9D")
     OnePairWithBiggerPair = PokerHand("4H 4H 5H 7H 9D")
