@@ -4,6 +4,8 @@ class PokerHand:
         cards = cardString.split(' ')
         self.cardRanks = [self.faceRanks[x[:-1]] for x in cards]
         self.cardRanks.sort(reverse=True)
+        if self.cardRanks == [14, 5, 4, 3, 2]:
+            self.cardRanks = [5, 4, 3, 2, 1]
         self.isFlush = all([x[1] == cards[0][-1] for x in cards])
         
     def _getFeatures(self):
@@ -12,7 +14,7 @@ class PokerHand:
         return [
              self.isFlush and self._isStraight(), #Straight Flush
              self._getNOfAKind(4),                #4 of a kind
-             self._getFullHouse(triple, pairs),   
+             self._isFullHouse(triple, pairs),   
              self.isFlush,
              self._isStraight(),
              triple,
@@ -28,9 +30,8 @@ class PokerHand:
     def _isStraight(self):
         return all([neighbor[0] == neighbor[1] + 1 for neighbor in zip(self.cardRanks[:-1], self.cardRanks[1:])])
     
-    def _getFullHouse(self, triple, pairs):
-        if len(pairs) == 3 and len(triple) == 1:
-            return [triple, pairs]
+    def _isFullHouse(self, triple, pairs):
+        return len(pairs) == 3 and len(triple) == 1
 
     def __cmp__(self, other):
         return cmp(self._getFeatures(), other._getFeatures())
@@ -46,6 +47,7 @@ class Hands:
     TwoPairs = PokerHand("2H 2H 3H 3H 9D")
     ThreeOfAKind = PokerHand("2H 2H 2H 3H 9D")
     Straight = PokerHand("2H 3H 4H 5H 6D")
+    SmallestStraight = PokerHand("AD 2H 3H 4H 5D")
     BiggerStraight = PokerHand("3H 4H 5H 6D 7D")
     Flush = PokerHand("2H 3H 6H 7H 9H")
     FullHouse = PokerHand("3H 3H 3H 4D 4D")
@@ -78,11 +80,14 @@ class TestPokerHand(unittest.TestCase):
     def testThreeOfAKindWinsTwoPairs(self):
         self.assertGreater(Hands.ThreeOfAKind, Hands.TwoPairs)
 
-    def testStraightWinsTwoPairs(self):
+    def testStraightWinsThreeOfAKind(self):
         self.assertGreater(Hands.Straight, Hands.ThreeOfAKind)
 
     def testStraightLoseToBiggerStraight(self):
         self.assertLess(Hands.Straight, Hands.BiggerStraight)
+
+    def testSmallestStraighWinsThreeOfAKind(self):
+        self.assertGreater(Hands.SmallestStraight, Hands.ThreeOfAKind)
 
     def testFlushWinsStraight(self):
         self.assertGreater(Hands.Flush, Hands.Straight)
