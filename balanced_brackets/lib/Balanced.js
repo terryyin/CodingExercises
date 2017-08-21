@@ -1,12 +1,13 @@
 function Balanced() {
 }
 
-Balanced.prototype.balanced = function (string) {
-  var pair = /(\(\))|(\[\])|(\{\})/;
-  while (string.match(pair)) {
-    string = string.replace(pair, '');
+function balanced(string) {
+  var brackets = /(\(\))|(\{\})|(\[\])/;
+  if (string.match(brackets)) {
+    return balanced(string.replace(brackets, ''));
   }
   return string.length === 0;
-};
+}
 
+Balanced.prototype.balanced = balanced;
 module.exports = Balanced;

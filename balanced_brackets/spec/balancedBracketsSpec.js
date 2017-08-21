@@ -6,36 +6,52 @@ describe("balanced brackets", function() {
     balanced = (new Balanced()).balanced;
   });
 
-  it('should mark empty string as valid', function() {
+  it('should mark an empty string as balanced', function() {
     expect(balanced('')).toBeTruthy();
   });
 
-  it('should mark string with one parenthesis invalid', function() {
+  it('should mark a single parenthesis as unbalanced', function() {
     expect(balanced('(')).toBeFalsy();
   });
 
-  it('should mark string with one pair of brackets valid', function() {
+  it('should mark a pair of parentheses as balanced', function() {
     expect(balanced('()')).toBeTruthy();
   });
 
-  it('should mark string with two pairs of brackets valid', function() {
+  it('should mark a pairs of reversed parentheses as unbalanced', function() {
+    expect(balanced(')(')).toBeFalsy();
+  });
+
+  it('should mark a pair of parentheses and a single one as unbalanced', function() {
+    expect(balanced('()(')).toBeFalsy();
+  });
+
+  it('should mark two pairs of parentheses as balanced', function() {
     expect(balanced('()()')).toBeTruthy();
   });
 
-  it('should mark string with nested pairs of brackets valid', function() {
+  it('should mark two pairs nested of parentheses as balanced', function() {
     expect(balanced('(())')).toBeTruthy();
   });
 
-  it('should mark string with one pair of square brackets valid', function() {
+  it('should mark three pairs of parentheses as balanced', function() {
+    expect(balanced('()()()')).toBeTruthy();
+  });
+
+  it('should mark one pair of square brackets as balanced', function() {
     expect(balanced('[]')).toBeTruthy();
   });
 
-  it('should mark string with one pair of curly brackets valid', function() {
+  it('should mark one pair of curly brackets as balanced', function() {
     expect(balanced('{}')).toBeTruthy();
   });
 
-  it('should mark string with mixed nested pairs of brackets valid', function() {
-    expect(balanced('({})')).toBeTruthy();
+  it('should mark mixed pairs of brackets as balanced', function() {
+    expect(balanced('{()}')).toBeTruthy();
+  });
+
+  it('should mark mixed pairs of brackets as balanced1', function() {
+    expect(balanced('({[]})')).toBeTruthy();
   });
 
 });
