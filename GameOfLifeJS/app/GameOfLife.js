@@ -1,16 +1,27 @@
-function GameOfLife() {
-
+function GameOfLife(cells) {
+  this.cells = cells || new Array();
 }
 
-GameOfLife.prototype.setAlive = ()=>{
+function Cell() {
+}
+
+GameOfLife.prototype.setAlive = function(cell){
+  this.cells.push(cell);
 };
 
-GameOfLife.prototype.isAlive = ()=>{
-  return false;
+GameOfLife.prototype.isAlive = function(){
+  return this.cells.length > 1;
 };
 
-GameOfLife.prototype.next = ()=>{
-  return new GameOfLife();
+GameOfLife.prototype.next = function(){
+  return new GameOfLife(this.cells);
 };
 
-module.exports = GameOfLife;
+Cell.prototype.neighbours = function(){
+  return ;
+};
+
+
+module.exports = {
+  GameOfLife: GameOfLife,
+  Cell: Cell };
