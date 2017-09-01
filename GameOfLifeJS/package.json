@@ -1,0 +1,16 @@
+{
+  "name": "gameoflifejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "jasmine spec",
+    "watch": "watch \"jshint app spec && jasmine\" ./app ./spec"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^2.8.0",
+    "jshint": "^2.9.5"
+  }
+}
