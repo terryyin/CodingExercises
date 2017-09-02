@@ -32,6 +32,21 @@ describe('In the Game of life, ', ()=> {
     });
   });
 
+  describe('#randomize', ()=> {
+    it('should set random place to be alive', ()=> {
+      spyOn(Math, 'random').and.returnValue(0.04444);;
+      game.randomize();
+      expect(game.isAlive(new Cell(2, 2))).toBe(true);
+    });
+  });
+
+  describe('no duplicated cells', ()=> {
+    it('should not keep duplicated cell', ()=> {
+      game = new GameOfLife([new Cell(1, 2), new Cell(1, 2)]);
+      expect(game.cells.length).toBe(1);
+    });
+  });
+
 });
 
 describe('A cell', ()=> {

@@ -1,9 +1,30 @@
 function GameOfLife(cells) {
   this.cells = cells || new Array();
+  this.cells = this.cells.filter((v, i, self)=>{
+    let j = 0;
+    for(; j<self.length; j++)
+      if (self[j].equals(v))
+        break;
+
+    return j === i;
+  });
 }
+
+GameOfLife.prototype.randomize = function(){
+  this.setAlives(
+    [...Array(180)].map(()=>{
+      return new Cell(
+        Math.floor(Math.random() * 50),
+        Math.floor(Math.random() * 50));
+    }));
+};
 
 GameOfLife.prototype.setAlives = function(cells){
   this.cells = this.cells.concat(cells);
+};
+
+GameOfLife.prototype.isAliveAt = function(x, y){
+  return this.isAlive(new Cell(x, y));
 };
 
 GameOfLife.prototype.isAlive = function(cell){
