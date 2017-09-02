@@ -1,16 +1,11 @@
-var GameOfLife = require('../src/GameOfLifeCells').GameOfLife;
-var Cell = require('../src/GameOfLifeCells').Cell;
+import GameOfLife from '../src/GameOfLifeCells'
 
 describe('In the Game of life, ', ()=> {
-  var the_cell = new Cell(8, 2);
-  var neighbours = Object.values(the_cell.neighbours());
-  var game;
+  var the_cell = "8, 2";
+  var neighbours = GameOfLife.neighboursOf(the_cell);;
 
-  beforeEach(()=> { game = new GameOfLife(); });
 
   describe('An alive cell', ()=> {
-    beforeEach(()=> { game.setAlives([the_cell]); });
-
     [
       [0, false],
       [1, false],
@@ -19,7 +14,7 @@ describe('In the Game of life, ', ()=> {
       [4, false]
     ].forEach((param)=> {
       it('should '+(param[1] ? '' : 'not') +' be alive with ' + param[0]+' neighbours', ()=> {
-        game.setAlives(neighbours.slice(0, param[0]));
+        let game = new GameOfLife(neighbours.slice(0, param[0]).concat([the_cell]));
         expect(game.next().isAlive(the_cell)).toBe(param[1]);
       });
     });
@@ -27,7 +22,7 @@ describe('In the Game of life, ', ()=> {
 
   describe('A dead cell', ()=> {
     it('should revive with 3 neighbours', ()=> {
-      game.setAlives(neighbours.slice(0, 3));
+      let game = new GameOfLife(neighbours.slice(0, 3));
       expect(game.next().isAlive(the_cell)).toBe(true);
     });
   });
@@ -35,28 +30,27 @@ describe('In the Game of life, ', ()=> {
   describe('#randomize', ()=> {
     it('should set random place to be alive', ()=> {
       spyOn(Math, 'random').and.returnValue(0.04444);;
-      game.randomize();
-      expect(game.isAlive(new Cell(2, 2))).toBe(true);
+      let game = GameOfLife.randomGame({rows: 50, cols: 50, seeds: 1});
+      expect(game.isAliveAt(2, 2)).toBe(true);
     });
   });
 
   describe('no duplicated cells', ()=> {
     it('should not keep duplicated cell', ()=> {
-      game = new GameOfLife(['1, 2', '1, 2']);
+      let game = new GameOfLife(['1, 2', '1, 2']);
       expect(game.aliveCells.size).toBe(1);
     });
   });
 
-});
-
-describe('A cell', ()=> {
-  var cell = new Cell(3, 2);
-
-  it('has neighbours', ()=> {
-    expect(cell.neighbours()[4]).toEqual('4, 3');
-    expect(cell.neighbours()[5]).toEqual('2, 3');
-    expect(cell.neighbours()[6]).toEqual('4, 1');
-    expect(cell.neighbours()[7]).toEqual('2, 1');
-  });
+  describe('A cell', ()=> {
+    var cell = '3, 2';
+    it('has neighbours', ()=> {
+      expect(GameOfLife.neighboursOf(cell)[4]).toEqual('4, 3');
+      expect(GameOfLife.neighboursOf(cell)[5]).toEqual('2, 3');
+      expect(GameOfLife.neighboursOf(cell)[6]).toEqual('4, 1');
+      expect(GameOfLife.neighboursOf(cell)[7]).toEqual('2, 1');
+    });
 })
+
+});
 

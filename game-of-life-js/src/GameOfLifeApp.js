@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import GameOfLife from './GameOfLifeCells'
 
 class GameOfLifeApp extends Component {
   constructor(props) {
     super(props);
-    this.state = {game: props.game};
-    this.state.game.randomize();
+    this.state = {game: GameOfLife.randomGame(props)};
   }
 
   componentDidMount() {
@@ -22,10 +22,10 @@ class GameOfLifeApp extends Component {
     return (
       <div className="GameOfLifeApp">
           <h2>Welcome to the game of life</h2>
-          <h2>{this.state.game.aliveCells.length}</h2>
-      {[...Array(250)].map((x, i) =>
+          <h2>{this.state.game.aliveCells.size}</h2>
+      {[...Array(this.props.rows)].map((x, i) =>
         <div className="gol-row">
-        {[...Array(250)].map((y, j) =>
+        {[...Array(this.props.cols)].map((y, j) =>
           <div className={"gol-cell" + (this.state.game.isAliveAt(i, j) ? " alive" : '') }>
           </div>
         )}
