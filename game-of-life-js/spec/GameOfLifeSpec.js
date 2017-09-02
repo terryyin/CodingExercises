@@ -42,8 +42,8 @@ describe('In the Game of life, ', ()=> {
 
   describe('no duplicated cells', ()=> {
     it('should not keep duplicated cell', ()=> {
-      game = new GameOfLife([new Cell(1, 2), new Cell(1, 2)]);
-      expect(game.cells.length).toBe(1);
+      game = new GameOfLife(['1, 2', '1, 2']);
+      expect(game.aliveCells.size).toBe(1);
     });
   });
 
@@ -53,10 +53,10 @@ describe('A cell', ()=> {
   var cell = new Cell(3, 2);
 
   it('has neighbours', ()=> {
-    expect(cell.neighbours()[4].equals(new Cell(4, 3))).toBe(true);
-    expect(cell.neighbours()[5].equals(new Cell(2, 3))).toBe(true);
-    expect(cell.neighbours()[6].equals(new Cell(4, 1))).toBe(true);
-    expect(cell.neighbours()[7].equals(new Cell(2, 1))).toBe(true);
+    expect(cell.neighbours()[4]).toEqual('4, 3');
+    expect(cell.neighbours()[5]).toEqual('2, 3');
+    expect(cell.neighbours()[6]).toEqual('4, 1');
+    expect(cell.neighbours()[7]).toEqual('2, 1');
   });
 })
 

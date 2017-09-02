@@ -10,7 +10,7 @@ class GameOfLifeApp extends Component {
   componentDidMount() {
     this.timerID = setInterval(
       () => { this.setState({game: this.state.game.next()});},
-        300
+        100
     );
   }
 
@@ -22,10 +22,10 @@ class GameOfLifeApp extends Component {
     return (
       <div className="GameOfLifeApp">
           <h2>Welcome to the game of life</h2>
-          <h2>{this.state.game.cells.length}</h2>
-      {[...Array(50)].map((x, i) =>
+          <h2>{this.state.game.aliveCells.length}</h2>
+      {[...Array(250)].map((x, i) =>
         <div className="gol-row">
-        {[...Array(50)].map((y, j) =>
+        {[...Array(250)].map((y, j) =>
           <div className={"gol-cell" + (this.state.game.isAliveAt(i, j) ? " alive" : '') }>
           </div>
         )}

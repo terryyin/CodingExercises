@@ -1,26 +1,27 @@
-function GameOfLife(cells) {
-  this.cells = cells || new Array();
-  this.cells = this.cells.filter((v, i, self)=>{
-    let j = 0;
-    for(; j<self.length; j++)
-      if (self[j].equals(v))
-        break;
+Set.prototype.union = function(setB) {
+  var union = new Set(this);
+  for (var elem of setB) {
+    union.add(elem);
+  }
+  return union;
+}
 
-    return j === i;
-  });
+function GameOfLife(cells) {
+  this.aliveCells = cells || new Array();
+  this.aliveCells = new Set(this.aliveCells);//.filter((v, i, self)=>self.indexOf(v)===i);
 }
 
 GameOfLife.prototype.randomize = function(){
-  this.setAlives(
-    [...Array(180)].map(()=>{
-      return new Cell(
-        Math.floor(Math.random() * 50),
-        Math.floor(Math.random() * 50));
-    }));
+  this.aliveCells = new Set(
+    [...Array(3080)].map(()=>
+       new Cell(
+        Math.floor(Math.random() * 200 + 25),
+        Math.floor(Math.random() * 200 + 25)).toString()
+    ));
 };
 
 GameOfLife.prototype.setAlives = function(cells){
-  this.cells = this.cells.concat(cells);
+  this.aliveCells = this.aliveCells.union(cells.map((x)=>x.toString()));
 };
 
 GameOfLife.prototype.isAliveAt = function(x, y){
@@ -28,23 +29,27 @@ GameOfLife.prototype.isAliveAt = function(x, y){
 };
 
 GameOfLife.prototype.isAlive = function(cell){
-  return this.cells.some((c)=>{ return c.equals(cell);});
+  return this.aliveCells.has(cell.toString());
 };
 
 GameOfLife.prototype.next = function(){
   return new GameOfLife(
-    this.cellsWithNeighbourRange(this.cells, [2, 3]).concat(
+    this.cellsWithNeighbourRange(Array.from(this.aliveCells.values()), [2, 3]).concat(
     this.cellsWithNeighbourRange(this.allNeighbours(), [3])));
 };
 
+GameOfLife.prototype.toC = function(s){
+  return new Cell(...s.split(', ').map((x)=>parseInt(x)));
+}
+
 GameOfLife.prototype.allNeighbours = function(){
-  return this.cells.reduce((a, c)=>{
-    return a.concat(c.neighbours()); }, []);
+  return Array.from(this.aliveCells.values()).reduce((a, c)=>{
+    return a.concat(this.toC(c).neighbours()); }, []);
 }
 
 GameOfLife.prototype.cellsWithNeighbourRange = function(cells, range){
   return cells.filter((c)=>{
-    return range.includes(this.numberOfAliveNeighbours(c)); });
+    return range.includes(this.numberOfAliveNeighbours(this.toC(c))); });
 }
 
 GameOfLife.prototype.numberOfAliveNeighbours = function(cell){
@@ -58,17 +63,17 @@ function Cell(x, y) {
 }
 
 Cell.prototype.toString = function(){
-  return '(' + [this.x, this.y].join(', ') + ')';
+  return [this.x, this.y].join(', ');
+};
+
+Cell.prototype.split = function(){
+  return [this.x, this.y];
 };
 
 Cell.prototype.neighbours = function(){
   return [
     [-1, 0], [1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]
-  ].map((d)=> {return  new Cell(this.x + d[0], this.y + d[1]) });
-};
-
-Cell.prototype.equals = function(other){
-  return this.x === other.x && this.y === other.y;
+  ].map((d)=> {return [this.x + d[0], this.y + d[1]].join(', ') });
 };
 
 module.exports = { GameOfLife: GameOfLife, Cell: Cell };
