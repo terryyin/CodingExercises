@@ -24,10 +24,20 @@ func ExampleIsAddI() {
 	// X
 }
 
-func ExampleXsAddI() {
+func ExampleXAddI() {
 	fmt.Println(romanAdd("X", "I"))
 	fmt.Println(romanAdd("XI", "I"))
+	fmt.Println(romanAdd("XII", "I"))
+	fmt.Println(romanAdd("XIII", "I"))
+	fmt.Println(romanAdd("XIV", "I"))
+	fmt.Println(romanAdd("XIX", "I"))
+	fmt.Println(romanAdd("XX", "I"))
 	// Output:
 	// XI
 	// XII
+	// XIII
+	// XIV
+	// XV
+	// XX
+	// XXI
 }
