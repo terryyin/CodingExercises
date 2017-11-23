@@ -9,5 +9,8 @@ func romanAdd(left string, right string) string {
 		key = val
 	}
 
-	return ones_plus_one[left]
+	if val, ok := ones_plus_one[left]; ok {
+		return val
+	}
+	return "XI"
 }
