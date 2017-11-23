@@ -41,3 +41,15 @@ func ExampleXAddI() {
 	// XX
 	// XXI
 }
+
+func ExampleXsAddI() {
+	fmt.Println(romanAdd("XXXIX", "I"))
+	fmt.Println(romanAdd("XLIX", "I"))
+	fmt.Println(romanAdd("LXXXIX", "I"))
+	fmt.Println(romanAdd("XCIX", "I"))
+	// Output:
+	// XL
+	// L
+	// XC
+	// C
+}
