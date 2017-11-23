@@ -26,6 +26,8 @@ func ExampleIsAddI() {
 
 func ExampleXsAddI() {
 	fmt.Println(romanAdd("X", "I"))
+	fmt.Println(romanAdd("XI", "I"))
 	// Output:
 	// XI
+	// XII
 }
