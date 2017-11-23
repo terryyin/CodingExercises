@@ -13,7 +13,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jasmine",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "watch": "watch 'jasmine' ./lib ./src"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

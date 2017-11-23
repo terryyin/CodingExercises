@@ -1,4 +1,5 @@
 function network_attack(network) {
+  var cache = [...Array(netowrk.length)];
   const time_to_start = function(index, path) {
     if (path.includes(index)) return Infinity;
     return Math.min(...[...Array(network.length)].map((_,i)=>i).filter((i)=>network[index][i]===1).map((i)=>
