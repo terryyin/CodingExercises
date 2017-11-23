@@ -53,3 +53,11 @@ func ExampleXsAddI() {
 	// XC
 	// C
 }
+
+func ExampleCsAddI() {
+	fmt.Println(romanAdd("CCCXCIX", "I"))
+	fmt.Println(romanAdd("CMXCIX", "I"))
+	// Output:
+	// CD
+	// M
+}
