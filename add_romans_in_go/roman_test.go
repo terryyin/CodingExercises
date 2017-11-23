@@ -61,3 +61,35 @@ func ExampleCsAddI() {
 	// CD
 	// M
 }
+
+func ExampleAddII() {
+	fmt.Println(romanAdd("I", "II"))
+	fmt.Println(romanAdd("II", "II"))
+	// Output:
+	// III
+	// IV
+}
+
+func ExampleAddIII() {
+	fmt.Println(romanAdd("I", "III"))
+	// Output:
+	// IV
+}
+
+func ExampleAddIV() {
+	fmt.Println(romanAdd("I", "IV"))
+	// Output:
+	// V
+}
+
+func ExampleAddV() {
+	fmt.Println(romanAdd("I", "V"))
+	// Output:
+	// VI
+}
+
+func ExampleAddVI() {
+	fmt.Println(romanAdd("I", "VI"))
+	// Output:
+	// VII
+}
