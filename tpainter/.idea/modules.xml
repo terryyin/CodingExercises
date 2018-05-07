@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tpainter.iml" filepath="$PROJECT_DIR$/.idea/modules/tpainter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tpainter_main.iml" filepath="$PROJECT_DIR$/.idea/modules/tpainter_main.iml" group="tpainter" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tpainter_test.iml" filepath="$PROJECT_DIR$/.idea/modules/tpainter_test.iml" group="tpainter" />
+    </modules>
+  </component>
+</project>
