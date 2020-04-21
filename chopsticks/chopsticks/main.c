@@ -70,6 +70,9 @@ void test_all() {
   expect_eq(0, solver(1, example(&tc, 2, 6, /**/ 4, 4, 4, 4, 5, 5)), "two people and 2n has also same length");
   expect_eq(1, solver(1, example(&tc, 2, 6, /**/ 1, 2, 4, 4, 4, 4)), "two people only 2n has same length");
 
+  expect_eq(23, solver(1, example(&tc, 9, 40, /**/ 1, 8, 10, 16, 19, 22, 27, 33, 36, 40, 47, 52, 56, 61, 63, 71, 72, 75, 81, 81, 84, 88, 96, 98,
+          103, 110, 113, 118, 124, 128, 129, 134, 134, 139, 148, 157, 157, 160, 162, 164)), "final test");
+
   printf("Done.\n");
   return;
 }
