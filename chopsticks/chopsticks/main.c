@@ -57,6 +57,8 @@ void test_all() {
   expect_eq(0, solver(1, push(push(for_people(1, &tc), 1, 4), 3, 5)), "one shorter but there are more");
   expect_eq(0, solver(1, push(push(for_people(1, &tc), 2, 4), 2, 5)), "two short two long");
 
+  expect_eq(1, solver(1, push(push(push(for_people(2, &tc), 3, 4), 1, 5), 2, 6)), "two people and 2n has different length");
+
   printf("Done.\n");
   return;
 }
