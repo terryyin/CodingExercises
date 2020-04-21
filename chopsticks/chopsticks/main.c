@@ -33,7 +33,7 @@ TestCase * people_chopsticks(int p, int n, TestCase * result) {
 
 TestCase * shorter(int n, TestCase * result) {
     for(int i=0; i < n; i++)
-      result->chopstick_lengths[0] = 4;
+      result->chopstick_lengths[i] = 4;
     return result;
 }
 
@@ -48,6 +48,7 @@ void test_all() {
     expect_eq(0, solver(1, people_chopsticks(1, 3, &tc)), "all same");
     expect_eq(1, solver(1, shorter(1, people_chopsticks(1, 3, &tc))), "one shorter");
     expect_eq(0, solver(1, shorter(1, people_chopsticks(1, 4, &tc))), "one shorter but there are more");
+    expect_eq(0, solver(1, shorter(2, people_chopsticks(1, 4, &tc))), "two short two long");
     printf("Done.\n");
     return;
 }
