@@ -26,8 +26,12 @@ int find_pair(int count, const int * lengths) {
 }
 
 int solve_one_case(TestCase * test_case) {
-  int top = test_case->chopstick_count - test_case->people_count * 3;
-  return find_pair(top, test_case->chopstick_lengths);
+  int result = 0;
+  int top = test_case->chopstick_count - 3;
+  for(int p = 0; p < test_case->people_count; p++) {
+    result += find_pair(top - p * 3, &test_case->chopstick_lengths[p * 3]);
+  }
+  return result;
 }
 
 int solver(int total, TestCase * test_cases) {
@@ -61,7 +65,7 @@ void test_all() {
   expect_eq(0, solver(1, push(push(for_people(1, &tc), 1, 4), 3, 5)), "one shorter but there are more");
   expect_eq(0, solver(1, push(push(for_people(1, &tc), 2, 4), 2, 5)), "two short two long");
 
-  //expect_eq(1, solver(1, push(push(push(for_people(2, &tc), 3, 4), 1, 5), 2, 6)), "two people and 2n has different length");
+  expect_eq(1, solver(1, push(push(push(for_people(2, &tc), 3, 4), 1, 5), 2, 6)), "two people and 2n has different length");
 
   printf("Done.\n");
   return;
