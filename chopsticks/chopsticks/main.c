@@ -17,7 +17,7 @@ typedef struct TestCase {
 
 int find_pair(int count, const int * lengths) {
   int result = 0;
-  for(int i = 0; i <= count; i++) {
+  for(int i = 0; i <= count - 3; i++) {
     int d = (lengths[i] - lengths[i + 1]);
     d = d * d;
     if (i == 0 || result > d) result = d;
@@ -27,9 +27,8 @@ int find_pair(int count, const int * lengths) {
 
 int solve_one_case(TestCase * test_case) {
   int result = 0;
-  int top = test_case->chopstick_count - 3;
   for(int p = 0; p < test_case->people_count; p++) {
-    result += find_pair(top - p * 3, &test_case->chopstick_lengths[p * 3]);
+    result += find_pair(test_case->chopstick_count - p * 3, &test_case->chopstick_lengths[p * 3]);
   }
   return result;
 }
