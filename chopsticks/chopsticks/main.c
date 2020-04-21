@@ -7,6 +7,7 @@
 //
 
 #include <stdio.h>
+#include <stdarg.h>
 #include <assert.h>
 
 typedef struct TestCase {
@@ -37,17 +38,16 @@ int solver(int total, TestCase * test_cases) {
   return solve_one_case(test_cases);;
 }
 
-TestCase * for_people(int p, TestCase * result) {
-  TestCase tc = {p,0,{}};
+TestCase * example(TestCase * result, int people_count, int chopstick_count, ...) {
+  va_list argp;
+  TestCase tc = {people_count, chopstick_count};
   *result = tc;
-  return result;
-}
 
-TestCase * push(TestCase * result, int n, int length) {
-  int i = result->chopstick_count;;
-  for(; i < result-> chopstick_count + n; i++)
-    result->chopstick_lengths[i] = length;
-  result->chopstick_count = i;
+  va_start(argp, chopstick_count);
+  for(int i = 0; i < chopstick_count; i++)
+    result->chopstick_lengths[i] = va_arg(argp, int);
+  va_end(argp);
+
   return result;
 }
 
@@ -59,14 +59,14 @@ void expect_eq(int expect, int actual, const char * message) {
 
 void test_all() {
   TestCase tc;
-  expect_eq(0, solver(1, push(for_people(1, &tc), 3, 5)), "all same");
-  expect_eq(1, solver(1, push(push(for_people(1, &tc), 1, 4), 2, 5)), "one shorter");
-  expect_eq(0, solver(1, push(push(for_people(1, &tc), 1, 4), 3, 5)), "one shorter but there are more");
-  expect_eq(0, solver(1, push(push(for_people(1, &tc), 2, 4), 2, 5)), "two short two long");
+  expect_eq(1, solver(1, example(&tc, 1, 3, /**/ 4, 5, 5)), "one shorter");
+  expect_eq(0, solver(1, example(&tc, 1, 3, /**/ 5, 5, 5)), "all same");
+  expect_eq(0, solver(1, example(&tc, 1, 4, /**/ 4, 5, 5, 5)), "one shorter but there are more");
+  expect_eq(0, solver(1, example(&tc, 1, 4, /**/ 4, 4, 5, 5)), "two short two long");
 
-  expect_eq(1, solver(1, push(push(push(for_people(2, &tc), 3, 4), 1, 5), 2, 6)), "two people and 2n has different length");
-  expect_eq(0, solver(1, push(push(for_people(2, &tc), 4, 4), 2, 5)), "two people and 2n has also same length");
-  expect_eq(1, solver(1, push(push(push(for_people(2, &tc), 1, 1), 1, 2), 4, 4)), "two people only 2n has same length");
+  expect_eq(1, solver(1, example(&tc, 2, 6, /**/ 4, 4, 4, 5, 6, 6)), "two people and 2n has different length");
+  expect_eq(0, solver(1, example(&tc, 2, 6, /**/ 4, 4, 4, 4, 5, 5)), "two people and 2n has also same length");
+  expect_eq(1, solver(1, example(&tc, 2, 6, /**/ 1, 2, 4, 4, 4, 4)), "two people only 2n has same length");
 
   printf("Done.\n");
   return;
