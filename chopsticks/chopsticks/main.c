@@ -16,7 +16,8 @@ typedef struct TestCase {
 } TestCase;
 
 int solve_one_case(TestCase * test_case) {
-  int d = (test_case->chopstick_lengths[0] - test_case->chopstick_lengths[1]);
+  int index = test_case->chopstick_count - test_case->people_count * 3;
+  int d = (test_case->chopstick_lengths[index] - test_case->chopstick_lengths[index + 1]);
   return d * d;
 }
 
