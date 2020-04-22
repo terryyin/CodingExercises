@@ -24,14 +24,18 @@ void print(TestCase * tc) {
   printf("\n#############\n");
 }
 
+int neighbour_square(int i, TestCase * tc) {
+  int d = (tc->chopstick_lengths[i] - tc->chopstick_lengths[i + 1]);
+  return d * d;
+}
+
 int find_pair(int p, int start, TestCase * tc) {
   if(p >= tc->people_count) return 0;
   int result = 2147483647;
   int max = tc->chopstick_count - (tc->people_count - p) * 3;
   int next_p;
   for(int i = start; i <= max; i++) {
-    int d = (tc->chopstick_lengths[i] - tc->chopstick_lengths[i + 1]);
-    d = d * d;
+    int d = neighbour_square(i, tc);
     if (result > d){
       result = d;
       next_p = i + 2;
