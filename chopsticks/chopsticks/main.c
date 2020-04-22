@@ -35,14 +35,14 @@ int find_pair(int p, int start, TestCase * tc) {
     if (result > d){
       result = d;
       next_p = i + 2;
-      printf("@%d(%d,%d)\n", i, tc->chopstick_lengths[i], tc->chopstick_lengths[i + 1]);
+  //    printf("P%d@%d(%d,%d)\n", p, i, tc->chopstick_lengths[i], tc->chopstick_lengths[i + 1]);
     }
   }
   return result + find_pair(p + 1, next_p, tc);
 }
 
 int solve_one_case(TestCase * test_case) {
-  //print(test_case);
+  // print(test_case);
   return find_pair(0, 0, test_case);
 }
 
@@ -81,7 +81,7 @@ void test_all() {
   expect_eq(1, solver(1, example(&tc, 2, 6, /**/ 1, 2, 4, 4, 4, 4)), "two people only 2n has same length");
   expect_eq(0, solver(1, example(&tc, 2, 6, /**/ 1, 1, 2, 2, 7, 100)), "pairs");
   expect_eq(2, solver(1, example(&tc, 2, 6, /**/ 1, 2, 2, 3, 7, 100)), "pairs should'nt take");
-  expect_eq(2, solver(1, example(&tc, 2, 7, /**/ 1, 5, 5, 6, 7, 100, 200)), "pairs overlapping (5,5) (5,6)");
+  expect_eq(1, solver(1, example(&tc, 2, 7, /**/ 1, 5, 5, 6, 7, 100, 200)), "pairs overlapping (5,5) (5,6)");
 
 
   //expect_eq(23, solver(1, example(&tc, 9, 40, /**/ 1, 8, 10, 16, 19, 22, 27, 33, 36, 40, 47, 52, 56, 61, 63, 71, 72, 75, 81, 81, 84, 88, 96, 98,
