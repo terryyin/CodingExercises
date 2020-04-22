@@ -14,6 +14,7 @@ typedef struct TestCase {
   int people_count;
   int chopstick_count;
   int chopstick_lengths[5000];
+  int cache[1008][5000];
 } TestCase;
 
 void print(TestCase * tc) {
@@ -30,6 +31,7 @@ int neighbour_square(int i, TestCase * tc) {
 }
 
 int find_pair(int p, int start, TestCase * tc) {
+  if(tc->cache[p][start] != 0) return tc->cache[p][start];
   if(p >= tc->people_count) return 0;
   int result = 2147483647;
   int max = tc->chopstick_count - (tc->people_count - p) * 3;
@@ -41,7 +43,7 @@ int find_pair(int p, int start, TestCase * tc) {
       result = d;
     }
   }
-  return result;
+  return tc->cache[p][start] = result;
 }
 
 int solve_one_case(TestCase * test_case) {
@@ -91,11 +93,6 @@ void test_all() {
   for(int i = 0; i < 10; i++)
     expect_eq(23, solver(1, example(&tc, 9, 40, /**/ 1, 8, 10, 16, 19, 22, 27, 33, 36, 40, 47, 52, 56, 61, 63, 71, 72, 75, 81, 81, 84, 88, 96, 98,
             103, 110, 113, 118, 124, 128, 129, 134, 134, 139, 148, 157, 157, 160, 162, 164)), "final test");
-
-
-
-
-
 
   printf("Done.\n");
   return;
