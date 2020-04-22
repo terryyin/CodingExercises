@@ -16,20 +16,34 @@ typedef struct TestCase {
   int chopstick_lengths[5000];
 } TestCase;
 
-int find_pair(int p, TestCase * tc) {
-  if(p > tc->people_count) return 0;
+void print(TestCase * tc) {
+  printf("=============\n");
+  printf("people: %d, cs: %d\n", tc->people_count, tc->chopstick_count);
+  for(int i =0; i < tc->chopstick_count; i++)
+    printf("%d ", tc->chopstick_lengths[i]);
+  printf("\n#############\n");
+}
+
+int find_pair(int p, int start, TestCase * tc) {
+  if(p >= tc->people_count) return 0;
   int result = 2147483647;
   int max = tc->chopstick_count - (tc->people_count - p) * 3;
-  for(int i = p * 2; i <= max; i++) {
+  int next_p;
+  for(int i = start; i <= max; i++) {
     int d = (tc->chopstick_lengths[i] - tc->chopstick_lengths[i + 1]);
     d = d * d;
-    if (result > d) result = d;
+    if (result > d){
+      result = d;
+      next_p = i + 2;
+      printf("@%d(%d,%d)\n", i, tc->chopstick_lengths[i], tc->chopstick_lengths[i + 1]);
+    }
   }
-  return result + find_pair(p + 1, tc);
+  return result + find_pair(p + 1, next_p, tc);
 }
 
 int solve_one_case(TestCase * test_case) {
-  return find_pair(0, test_case);
+  //print(test_case);
+  return find_pair(0, 0, test_case);
 }
 
 int solver(int total, TestCase * test_cases) {
@@ -67,7 +81,7 @@ void test_all() {
   expect_eq(1, solver(1, example(&tc, 2, 6, /**/ 1, 2, 4, 4, 4, 4)), "two people only 2n has same length");
   expect_eq(0, solver(1, example(&tc, 2, 6, /**/ 1, 1, 2, 2, 7, 100)), "pairs");
   expect_eq(2, solver(1, example(&tc, 2, 6, /**/ 1, 2, 2, 3, 7, 100)), "pairs should'nt take");
-  //expect_eq(2, solver(1, example(&tc, 2, 7, /**/ 1, 5, 5, 6, 7, 100, 200)), "pairs overlapping (5,5) (5,6)");
+  expect_eq(2, solver(1, example(&tc, 2, 7, /**/ 1, 5, 5, 6, 7, 100, 200)), "pairs overlapping (5,5) (5,6)");
 
 
   //expect_eq(23, solver(1, example(&tc, 9, 40, /**/ 1, 8, 10, 16, 19, 22, 27, 33, 36, 40, 47, 52, 56, 61, 63, 71, 72, 75, 81, 81, 84, 88, 96, 98,
