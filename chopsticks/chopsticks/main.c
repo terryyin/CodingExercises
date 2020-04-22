@@ -35,14 +35,13 @@ int find_pair(int p, int start, TestCase * tc) {
   int max = tc->chopstick_count - (tc->people_count - p) * 3;
   int next_p;
   for(int i = start; i <= max; i++) {
-    int d = neighbour_square(i, tc);
+    int d = neighbour_square(i, tc) + find_pair(p + 1, i+2, tc);
+  //printf("P%d@%d(%d,%d)\n", p, i, tc->chopstick_lengths[i], tc->chopstick_lengths[i + 1]);
     if (result > d){
       result = d;
-      next_p = i + 2;
-  //    printf("P%d@%d(%d,%d)\n", p, i, tc->chopstick_lengths[i], tc->chopstick_lengths[i + 1]);
     }
   }
-  return result + find_pair(p + 1, next_p, tc);
+  return result;
 }
 
 int solve_one_case(TestCase * test_case) {
