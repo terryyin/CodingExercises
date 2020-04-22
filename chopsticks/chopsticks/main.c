@@ -31,14 +31,19 @@ int neighbour_square(int i, TestCase * tc) {
 }
 
 int find_pair(int p, int start, TestCase * tc) {
-  if(tc->cache[p][start] != 0) return tc->cache[p][start];
   if(p >= tc->people_count) return 0;
   int result = 2147483647;
   int max = tc->chopstick_count - (tc->people_count - p) * 3;
   int next_p;
   for(int i = start; i <= max; i++) {
-    int d = neighbour_square(i, tc) + find_pair(p + 1, i+2, tc);
-  //printf("P%d@%d(%d,%d)\n", p, i, tc->chopstick_lengths[i], tc->chopstick_lengths[i + 1]);
+    int d = neighbour_square(i, tc);
+    if(tc->cache[p+1][i+2] != 0)
+      d += tc->cache[p+1][i+2];
+    else {
+      if (d >= result)
+        continue;
+      d += find_pair(p + 1, i+2, tc);
+    }
     if (result > d){
       result = d;
     }
