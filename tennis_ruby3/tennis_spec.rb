@@ -2,14 +2,12 @@
 #
 
 class TennisGame
-  attr_reader :score
-
   def initialize
-    @score = 'Love All'
+    @score = '0 0'
   end
 
   RULES = {
-      'Love All' => {player1: 'Fifteen Love', player2: 'Love Fifteen'},
+      '0 0' => {player1: 'Fifteen Love', player2: 'Love Fifteen'},
       'Fifteen Love' => {player1: 'Thirty Love', player2: 'Fifteen All'},
       'Love Fifteen' => {player1: 'Fifteen All', player2: 'Love Thirty'},
       'Fifteen All' => {player1: 'Thirty Fifteen', player2: 'Fifteen Thirty'},
@@ -23,8 +21,16 @@ class TennisGame
       'Advantage Player Two' => {player1: 'Deuce', player2: 'Player Two Wins'},
   }.freeze
 
+  NAMES = {
+    '0 0' => 'Love All',
+  }
   def player1_score = @score = RULES[@score][:player1]
   def player2_score = @score = RULES[@score][:player2]
+
+  def score
+    return NAMES[@score] if NAMES.keys.include?(@score)
+    @score
+  end
 end
 
 describe TennisGame do
