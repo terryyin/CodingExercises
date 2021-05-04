@@ -1,5 +1,12 @@
-class TennisGame
+# ruby 3.0.1
+#
 
+class TennisGame
+  def player1_score
+  end
+
+  def player2_score
+  end
 end
 
 describe TennisGame do
@@ -19,7 +26,11 @@ describe TennisGame do
     [4, 6, "Player Two Wins"]
   ].each do |player1_balls, player2_balls, expectation|
     it "when player1 wins #{player1_balls} and player2 wins #{player2_balls}, should say `#{expectation}`" do
-
+      game = TennisGame.new
+      (0..[player1_balls, player2_balls].min).each do
+        game.player1_score
+        game.player2_score
+      end
     end
   end
 
