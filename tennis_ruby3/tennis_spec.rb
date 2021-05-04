@@ -15,10 +15,9 @@ class TennisGame
       @score = 'Forty Thirty'
     elsif @score =='Deuce'
       @score = 'Advantage Player One'
-    elsif @score =='Advantage Player One'
-      @score = 'Player One Wins'
     else
       @score ={
+        'Advantage Player One' => 'Player One Wins',
         'Love All' => 'Fifteen Love'
       }[@score]
     end
