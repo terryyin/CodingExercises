@@ -9,6 +9,7 @@ class TennisGame
   end
 
   RULES = {
+      'Fifteen Love' => {player1: 'Thirty Love', player2: 'Fifteen All'},
       'Fifteen All' => {player1: 'Thirty Fifteen'},
       'Thirty All' => {player1: 'Forty Thirty'},
       'Deuce' => {player1: 'Advantage Player One'},
@@ -34,7 +35,7 @@ class TennisGame
     elsif @score =='Advantage Player One'
       @score = 'Deuce'
     else
-      @score ='Fifteen All'
+      @score =RULES[@score][:player2]
     end
   end
 end
