@@ -17,7 +17,11 @@ describe TennisGame do
     [4, 4, "Deuce"],
     [4, 5, "Advantage Player Two"],
     [4, 6, "Player Two Wins"]
-  ]
+  ].each do |player1_balls, player2_balls, expectation|
+    it "when player1 wins #{player1_balls} and player2 wins #{player2_balls}, should say `#{expectation}`" do
+
+    end
+  end
 
 end
 
