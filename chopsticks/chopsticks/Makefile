@@ -2,4 +2,4 @@ all: out
 	time ./out
 
 out: main.c
-	clang main.c -o out
+	gcc main.c -o out -lm -O2 -pipe -ansi -DONLINE_JUDGE
