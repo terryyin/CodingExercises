@@ -11,14 +11,17 @@ class TennisGame
   RULES = {
       'Love All' => {player1: 'Fifteen Love', player2: 'Love Fifteen'},
       'Fifteen Love' => {player1: 'Thirty Love', player2: 'Fifteen All'},
+      'Love Fifteen' => {player1: 'Fifteen All', player2: 'Love Thirty'},
       'Fifteen All' => {player1: 'Thirty Fifteen', player2: 'Fifteen Thirty'},
       'Thirty Fifteen' => { player1: 'Forty Fifteen', player2:'Thirty All'},
+      'Fifteen Thirty' => { player1: 'Thirty All', player2:'Fifteen Forty'},
       'Thirty All' => {player1: 'Forty Thirty', player2: 'Thirty Forty'},
       'Forty Thirty' => { player1: 'Player One Wins', player2:'Deuce'},
+      'Thirty Forty' => { player1: 'Deuce', player2:'Player Two Wins'},
       'Deuce' => {player1: 'Advantage Player One', player2: 'Advantage Player Two'},
       'Advantage Player One' => {player1: 'Player One Wins', player2: 'Deuce'},
       'Advantage Player Two' => {player1: 'Deuce', player2: 'Player Two Wins'},
-    }
+  }.freeze
 
   def player1_score = @score = RULES[@score][:player1]
   def player2_score = @score = RULES[@score][:player2]
