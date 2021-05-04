@@ -8,10 +8,10 @@ class TennisGame
 
   RULES = {
       '0 0' => {player1: '1 0', player2: '0 1'},
-      '1 0' => {player1: '2 0', player2: 'Fifteen All'},
-      '0 1' => {player1: 'Fifteen All', player2: 'Love Thirty'},
+      '1 0' => {player1: '2 0', player2: '1 1'},
+      '0 1' => {player1: '1 1', player2: 'Love Thirty'},
       '2 0' => {player1: '3 0', player2: '2 1'},
-      'Fifteen All' => {player1: 'Thirty Fifteen', player2: 'Fifteen Thirty'},
+      '1 1' => {player1: 'Thirty Fifteen', player2: 'Fifteen Thirty'},
       'Thirty Fifteen' => { player1: 'Forty Fifteen', player2:'Thirty All'},
       'Fifteen Thirty' => { player1: 'Thirty All', player2:'Fifteen Forty'},
       'Thirty All' => {player1: 'Forty Thirty', player2: 'Thirty Forty'},
@@ -26,6 +26,7 @@ class TennisGame
     '0 0' => 'Love All',
     '1 0' => 'Fifteen Love',
     '0 1' => 'Love Fifteen',
+    '1 1' => 'Fifteen All',
     '2 0' => 'Thirty Love',
   }
   def player1_score = @score = RULES[@score][:player1]
