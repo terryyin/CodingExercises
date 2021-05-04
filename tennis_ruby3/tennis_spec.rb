@@ -23,6 +23,8 @@ class TennisGame
       @score ='Love Fifteen'
     elsif @score == 'Thirty Fifteen'
       @score ='Thirty All'
+    elsif @score == 'Forty Thirty'
+      @score ='Deuce'
     else
       @score ='Fifteen All'
     end
@@ -39,7 +41,7 @@ describe TennisGame do
     [2, 1, "Thirty Fifteen"],
     [2, 2, "Thirty All"],
     [3, 2, "Forty Thirty"],
-    #    [3, 3, "Deuce"],
+    [3, 3, "Deuce"],
     #    [4, 3, "Advantage Player One"],
     #    [5, 3, "Player One Wins"],
     #    [3, 5, "Player Two Wins"],
