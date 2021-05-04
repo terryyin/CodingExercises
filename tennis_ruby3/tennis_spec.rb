@@ -13,14 +13,16 @@ class TennisGame
   private
 
   def rule
-    case @game_status
-    when [3, 4]
-      {player1: [3,3], player2: [0,4]}
-    when [4,3]
-      {player1: [4,0], player2: [3,3]}
-    else
-      {player1: [@game_status[0] + 1, @game_status[1]], player2: [@game_status[0], @game_status[1] + 1]}
-    end
+    {player1: [@game_status[0] + 1, @game_status[1]], player2: [@game_status[0], @game_status[1] + 1]}.merge(
+      case @game_status
+      when [3, 4]
+        {player1: [3,3]}
+      when [4,3]
+        {player2: [3,3]}
+      else
+        {}
+      end
+    )
   end
 
   def name
@@ -33,9 +35,9 @@ class TennisGame
       'Advantage %{p2}'
     in [4, 3]
       'Advantage %{p1}'
-    in [4, _]
+    in [4..5, _]
       '%{p1} Wins'
-    in [_, 4]
+    in [_, 4..5]
       '%{p2} Wins'
     else
       "%{#{@game_status[0]}} %{#{@game_status[1]}}"
