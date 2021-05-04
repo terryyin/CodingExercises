@@ -27,12 +27,12 @@ class TennisGame
   }.freeze
 
 
-  def player1_score = @score = rule.fetch(:player1) {[@score[0] + 1, @score[1]]}
-  def player2_score = @score = rule.fetch(:player2) {[@score[0], @score[1] + 1]}
+  def player1_score = @score = rule[:player1]
+  def player2_score = @score = rule[:player2]
   def score = name % { '0': 'Love', '1': 'Fifteen', '2': 'Thirty', '3': 'Forty' }
 
   private
-  def rule = RULES.fetch(@score, {})
+  def rule = {player1: [@score[0] + 1, @score[1]], player2: [@score[0], @score[1] + 1]}.merge(RULES.fetch(@score, {}))
   def name = NAMES.fetch(@score, "%{#{@score[0]}} %{#{@score[1]}}")
 end
 
