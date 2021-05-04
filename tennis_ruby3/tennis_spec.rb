@@ -2,22 +2,24 @@
 #
 
 class TennisGame
+  attr_reader :score
+
+  def initialize
+    @score = 'Love All'
+  end
+
   def player1_score
+    @score ='Fifteen Love'
   end
 
   def player2_score
-  end
-
-  def score
-    'Love All'
-
   end
 end
 
 describe TennisGame do
   [
     [0, 0, "Love All"],
-#    [1, 0, "Fifteen Love"],
+    [1, 0, "Fifteen Love"],
 #    [1, 1, "Fifteen All"],
 #    [2, 1, "Thirty Fifteen"],
 #    [2, 2, "Thirty All"],
@@ -32,14 +34,14 @@ describe TennisGame do
   ].each do |player1_balls, player2_balls, expectation|
     it "when player1 wins #{player1_balls} and player2 wins #{player2_balls}, should say `#{expectation}`" do
       game = TennisGame.new
-      (0..[player1_balls, player2_balls].min).each do
+      (0...[player1_balls, player2_balls].min).each do
         game.player1_score
         game.player2_score
       end
-      (0..(player1_balls - player2_balls)).each do
+      (0...(player1_balls - player2_balls)).each do
         game.player1_score
       end
-      (0..(player2_balls - player1_balls)).each do
+      (0...(player2_balls - player1_balls)).each do
         game.player2_score
       end
       expect(game.score).to eq expectation
