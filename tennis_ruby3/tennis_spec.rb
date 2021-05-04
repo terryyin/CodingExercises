@@ -12,7 +12,6 @@ class TennisGame
     if @score =='Fifteen All'
       @score = 'Thirty Fifteen'
     else
-
       @score ='Fifteen Love'
     end
   end
@@ -20,6 +19,8 @@ class TennisGame
   def player2_score
     if @score == 'Love All'
       @score ='Love Fifteen'
+    elsif @score == 'Thirty Fifteen'
+      @score ='Thirty All'
     else
       @score ='Fifteen All'
     end
@@ -34,7 +35,7 @@ describe TennisGame do
     [0, 1, "Love Fifteen"],
     [1, 1, "Fifteen All"],
     [2, 1, "Thirty Fifteen"],
-    #    [2, 2, "Thirty All"],
+    [2, 2, "Thirty All"],
     #    [3, 2, "Forty Thirty"],
     #    [3, 3, "Deuce"],
     #    [4, 3, "Advantage Player One"],
