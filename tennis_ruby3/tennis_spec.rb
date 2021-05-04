@@ -7,18 +7,12 @@ class TennisGame
   end
 
   RULES = {
-    [0,0] => {name: '%{0} All'},
-    [1,1] => {name: '%{1} All'},
-    [2,2] => {name: '%{2} All'},
-    [3,3] => {name: 'Deuce',},
     [1,3] => {player2: [0,4]},
     [2,3] => {player2: [0,4]},
     [3,1] => {player1: [4,0]},
     [3,2] => {player1: [4,0]},
-    [3,4] => {player1: [3,3], player2: [0,4], name: 'Advantage Player Two',},
-    [4,3] => {player1: [4,0], player2: [3,3], name: 'Advantage Player One',},
-    [4,0] => {name: 'Player One Wins',},
-    [0,4] => {name: 'Player Two Wins'},
+    [3,4] => {player1: [3,3], player2: [0,4]},
+    [4,3] => {player1: [4,0], player2: [3,3]},
   }.freeze
 
   NAMES = {
