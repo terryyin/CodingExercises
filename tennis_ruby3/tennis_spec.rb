@@ -19,9 +19,9 @@ class TennisGame
     '2 2' => {player1: '3 2', player2: '2 3'},
     '3 2' => {player1: ' 1 ', player2:'3 3'},
     '2 3' => {player1: '3 3', player2:' 2 '},
-    '3 3' => {player1: 'Advantage Player One', player2: 'Advantage Player Two'},
-    'Advantage Player One' => {player1: ' 1 ', player2: '3 3'},
-    'Advantage Player Two' => {player1: '3 3', player2: ' 2 '},
+    '3 3' => {player1: '4 3', player2: '3 4'},
+    '4 3' => {player1: ' 1 ', player2: '3 3'},
+    '3 4' => {player1: '3 3', player2: ' 2 '},
   }.freeze
 
   NAMES = {
@@ -39,6 +39,8 @@ class TennisGame
     '3 1' => 'Forty Fifteen',
     '3 2' => 'Forty Thirty',
     '3 3' => 'Deuce',
+    '3 4' => 'Advantage Player Two',
+    '4 3' => 'Advantage Player One',
     ' 1 ' => 'Player One Wins',
     ' 2 ' => 'Player Two Wins'
   }
