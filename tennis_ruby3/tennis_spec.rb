@@ -7,22 +7,22 @@ class TennisGame
   end
 
   RULES = {
-    [0,0] => {player2: [0,1], name: 'Love All',},
-    [0,1] => {player2: [0,2], name: 'Love Fifteen',},
-    [0,2] => {player2: [0,3], name: 'Love Thirty',},
-    [0,3] => {player2: [0,4], name: 'Love Forty',},
-    [1,0] => {player2: [1,1], name: 'Fifteen Love',},
-    [1,1] => {player2: [1,2], name: 'Fifteen All',},
-    [1,2] => {player2: [1,3], name: 'Fifteen Thirty',},
+    [0,0] => {name: 'Love All',},
+    [0,1] => {name: 'Love Fifteen',},
+    [0,2] => {name: 'Love Thirty',},
+    [0,3] => {name: 'Love Forty',},
+    [1,0] => {name: 'Fifteen Love',},
+    [1,1] => {name: 'Fifteen All',},
+    [1,2] => {name: 'Fifteen Thirty',},
     [1,3] => {player2: [0,4], name: 'Fifteen Forty',},
-    [2,0] => {player2: [2,1], name: 'Thirty Love',},
-    [2,1] => {player2: [2,2], name: 'Thirty Fifteen',},
-    [2,2] => {player2: [2,3], name: 'Thirty All',},
+    [2,0] => {name: 'Thirty Love',},
+    [2,1] => {name: 'Thirty Fifteen',},
+    [2,2] => {name: 'Thirty All',},
     [2,3] => {player2: [0,4], name: 'Thirty Forty',},
-    [3,0] => {player2: [3,1], name: 'Forty Love',},
-    [3,1] => {player1: [4,0], player2: [3,2], name: 'Forty Fifteen',},
-    [3,2] => {player1: [4,0], player2: [3,3], name: 'Forty Thirty',},
-    [3,3] => {player2: [3,4], name: 'Deuce',},
+    [3,0] => {name: 'Forty Love',},
+    [3,1] => {player1: [4,0], name: 'Forty Fifteen',},
+    [3,2] => {player1: [4,0], name: 'Forty Thirty',},
+    [3,3] => {name: 'Deuce',},
     [3,4] => {player1: [3,3], player2: [0,4], name: 'Advantage Player Two',},
     [4,3] => {player1: [4,0], player2: [3,3], name: 'Advantage Player One',},
     [4,0] => {name: 'Player One Wins',},
@@ -30,7 +30,7 @@ class TennisGame
   }.freeze
 
   def player1_score = @score = RULES[@score].fetch(:player1) {[@score[0] + 1, @score[1]]}
-  def player2_score = @score = RULES[@score][:player2]
+  def player2_score = @score = RULES[@score].fetch(:player2) {[@score[0], @score[1] + 1]}
 
   def score
     return RULES[@score][:name]
