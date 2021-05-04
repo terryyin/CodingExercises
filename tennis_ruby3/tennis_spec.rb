@@ -25,35 +25,34 @@ class TennisGame
   }.freeze
 
   NAMES = {
-    '0 0' => 'Love All',
-    '0 1' => 'Love Fifteen',
-    '0 2' => 'Love Thirty',
-    '0 3' => 'Love Forty',
-    '1 0' => 'Fifteen Love',
-    '1 1' => 'Fifteen All',
-    '1 2' => 'Fifteen Thirty',
-    '1 3' => 'Fifteen Forty',
-    '2 0' => 'Thirty Love',
-    '2 1' => 'Thirty Fifteen',
-    '2 2' => 'Thirty All',
-    '2 3' => 'Thirty Forty',
-    '3 0' => 'Forty Love',
-    '3 1' => 'Forty Fifteen',
-    '3 2' => 'Forty Thirty',
-    '3 3' => 'Deuce',
-    '3 4' => 'Advantage Player Two',
-    '4 3' => 'Advantage Player One',
-    ' 1 ' => 'Player One Wins',
-    ' 2 ' => 'Player Two Wins'
+    '0 0' => {name: 'Love All',},
+    '0 1' => {name: 'Love Fifteen',},
+    '0 2' => {name: 'Love Thirty',},
+    '0 3' => {name: 'Love Forty',},
+    '1 0' => {name: 'Fifteen Love',},
+    '1 1' => {name: 'Fifteen All',},
+    '1 2' => {name: 'Fifteen Thirty',},
+    '1 3' => {name: 'Fifteen Forty',},
+    '2 0' => {name: 'Thirty Love',},
+    '2 1' => {name: 'Thirty Fifteen',},
+    '2 2' => {name: 'Thirty All',},
+    '2 3' => {name: 'Thirty Forty',},
+    '3 0' => {name: 'Forty Love',},
+    '3 1' => {name: 'Forty Fifteen',},
+    '3 2' => {name: 'Forty Thirty',},
+    '3 3' => {name: 'Deuce',},
+    '3 4' => {name: 'Advantage Player Two',},
+    '4 3' => {name: 'Advantage Player One',},
+    ' 1 ' => {name: 'Player One Wins',},
+    ' 2 ' => {name: 'Player Two Wins'},
   }
   def player1_score = @score = RULES[@score][:player1]
-    def player2_score = @score = RULES[@score][:player2]
+  def player2_score = @score = RULES[@score][:player2]
 
-      def score
-        return NAMES[@score] if NAMES.keys.include?(@score)
-        @score
-      end
-    end
+  def score
+    return NAMES[@score][:name]
+  end
+end
 
     describe TennisGame do
       let(:game) { TennisGame.new }
