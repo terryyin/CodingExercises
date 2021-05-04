@@ -9,33 +9,19 @@ class TennisGame
   end
 
   RULES = {
+      'Love All' => {player1: 'Fifteen Love', player2: 'Love Fifteen'},
       'Fifteen Love' => {player1: 'Thirty Love', player2: 'Fifteen All'},
-      'Fifteen All' => {player1: 'Thirty Fifteen'},
-      'Thirty All' => {player1: 'Forty Thirty'},
-      'Deuce' => {player1: 'Advantage Player One'},
+      'Fifteen All' => {player1: 'Thirty Fifteen', player2: 'Fifteen Thirty'},
+      'Thirty Fifteen' => { player1: 'Forty Fifteen', player2:'Thirty All'},
+      'Thirty All' => {player1: 'Forty Thirty', player2: 'Thirty Forty'},
+      'Forty Thirty' => { player1: 'Player One Wins', player2:'Deuce'},
+      'Deuce' => {player1: 'Advantage Player One', player2: 'Advantage Player Two'},
       'Advantage Player One' => {player1: 'Player One Wins', player2: 'Deuce'},
-      'Love All' => {player1: 'Fifteen Love'}
+      'Advantage Player Two' => {player1: 'Deuce', player2: 'Player Two Wins'},
     }
 
-  def player1_score
-    @score =RULES[@score][:player1]
-  end
-
-  def player2_score
-    if @score == 'Love All'
-      @score ='Love Fifteen'
-    elsif @score == 'Thirty Fifteen'
-      @score ='Thirty All'
-    elsif @score == 'Forty Thirty'
-      @score ='Deuce'
-    elsif @score =='Deuce'
-      @score = 'Advantage Player Two'
-    elsif @score =='Advantage Player Two'
-      @score = 'Player Two Wins'
-    else
-      @score =RULES[@score][:player2]
-    end
-  end
+  def player1_score = @score = RULES[@score][:player1]
+  def player2_score = @score = RULES[@score][:player2]
 end
 
 describe TennisGame do
