@@ -7,7 +7,7 @@ class TennisGame
   end
 
   RULES = {
-    [0,0] => {name: 'Love All',},
+    [0,0] => {name: '%{0} All',},
     [0,1] => {name: 'Love Fifteen',},
     [0,2] => {name: 'Love Thirty',},
     [0,3] => {name: 'Love Forty',},
@@ -33,7 +33,7 @@ class TennisGame
   def player2_score = @score = RULES[@score].fetch(:player2) {[@score[0], @score[1] + 1]}
 
   def score
-    return RULES[@score][:name]
+    return RULES[@score][:name] % { '0': 'Love' }
   end
 end
 
