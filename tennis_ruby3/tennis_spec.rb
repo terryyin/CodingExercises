@@ -8,19 +8,19 @@ class TennisGame
 
   RULES = {
     [0,0] => {name: '%{0} All',},
-    [0,1] => {name: '%{0} Fifteen',},
+    [0,1] => {name: '%{0} %{1}',},
     [0,2] => {name: '%{0} Thirty',},
     [0,3] => {name: '%{0} Forty',},
-    [1,0] => {name: 'Fifteen %{0}',},
-    [1,1] => {name: 'Fifteen All',},
-    [1,2] => {name: 'Fifteen Thirty',},
-    [1,3] => {player2: [0,4], name: 'Fifteen Forty',},
+    [1,0] => {name: '%{1} %{0}',},
+    [1,1] => {name: '%{1} All',},
+    [1,2] => {name: '%{1} Thirty',},
+    [1,3] => {player2: [0,4], name: '%{1} Forty',},
     [2,0] => {name: 'Thirty %{0}',},
-    [2,1] => {name: 'Thirty Fifteen',},
+    [2,1] => {name: 'Thirty %{1}',},
     [2,2] => {name: 'Thirty All',},
     [2,3] => {player2: [0,4], name: 'Thirty Forty',},
     [3,0] => {name: 'Forty %{0}',},
-    [3,1] => {player1: [4,0], name: 'Forty Fifteen',},
+    [3,1] => {player1: [4,0], name: 'Forty %{1}',},
     [3,2] => {player1: [4,0], name: 'Forty Thirty',},
     [3,3] => {name: 'Deuce',},
     [3,4] => {player1: [3,3], player2: [0,4], name: 'Advantage Player Two',},
@@ -33,7 +33,7 @@ class TennisGame
   def player2_score = @score = RULES[@score].fetch(:player2) {[@score[0], @score[1] + 1]}
 
   def score
-    return RULES[@score][:name] % { '0': 'Love' }
+    return RULES[@score][:name] % { '0': 'Love', '1': 'Fifteen' }
   end
 end
 
