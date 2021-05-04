@@ -9,15 +9,15 @@ class TennisGame
   end
 
   RULES = {
-      'Fifteen All' => 'Thirty Fifteen',
-      'Thirty All' => 'Forty Thirty',
-      'Deuce' => 'Advantage Player One',
-      'Advantage Player One' => 'Player One Wins',
-      'Love All' => 'Fifteen Love'
+      'Fifteen All' => {player1: 'Thirty Fifteen'},
+      'Thirty All' => {player1: 'Forty Thirty'},
+      'Deuce' => {player1: 'Advantage Player One'},
+      'Advantage Player One' => {player1: 'Player One Wins'},
+      'Love All' => {player1: 'Fifteen Love'}
     }
 
   def player1_score
-    @score =RULES[@score]
+    @score =RULES[@score][:player1]
   end
 
   def player2_score
