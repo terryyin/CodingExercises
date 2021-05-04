@@ -4,27 +4,27 @@
 
 class TennisGame
   def initialize
-    @score = [0, 0]
+    @game_status = [0, 0]
   end
 
-  def score!(player) = @score = rule[player]
+  def score!(player) = @game_status = rule[player]
   def score = name % { '0': 'Love', '1': 'Fifteen', '2': 'Thirty', '3': 'Forty', 'p2': 'Player Two', 'p1': 'Player One' }
 
   private
 
   def rule
-    case @score
+    case @game_status
     when [3, 4]
       {player1: [3,3], player2: [0,4]}
     when [4,3]
       {player1: [4,0], player2: [3,3]}
     else
-      {player1: [@score[0] + 1, @score[1]], player2: [@score[0], @score[1] + 1]}
+      {player1: [@game_status[0] + 1, @game_status[1]], player2: [@game_status[0], @game_status[1] + 1]}
     end
   end
 
   def name
-    case @score
+    case @game_status
     in [3, 3]
       'Deuce'
     in [a, b] if a == b
@@ -38,7 +38,7 @@ class TennisGame
     in [_, 4]
       '%{p2} Wins'
     else
-      "%{#{@score[0]}} %{#{@score[1]}}"
+      "%{#{@game_status[0]}} %{#{@game_status[1]}}"
     end
   end
 end
