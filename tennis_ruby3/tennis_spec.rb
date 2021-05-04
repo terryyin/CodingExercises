@@ -33,6 +33,8 @@ class TennisGame
       @score = 'Advantage Player Two'
     elsif @score =='Advantage Player Two'
       @score = 'Player Two Wins'
+    elsif @score =='Advantage Player One'
+      @score = 'Deuce'
     else
       @score ='Fifteen All'
     end
@@ -54,9 +56,9 @@ describe TennisGame do
     [3, 4, "Advantage Player Two"],
     [5, 3, "Player One Wins"],
     [3, 5, "Player Two Wins"],
-    #    [4, 4, "Deuce"],
-    #    [4, 5, "Advantage Player Two"],
-    #    [4, 6, "Player Two Wins"]
+    [4, 4, "Deuce"],
+    [4, 5, "Advantage Player Two"],
+    [4, 6, "Player Two Wins"]
   ].each do |player1_balls, player2_balls, expectation|
     it "when player1 wins #{player1_balls} and player2 wins #{player2_balls}, should say `#{expectation}`" do
       (0...[player1_balls, player2_balls].min).each do
