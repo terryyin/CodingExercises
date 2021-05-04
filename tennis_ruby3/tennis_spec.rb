@@ -9,18 +9,13 @@ class TennisGame
   end
 
   def player1_score
-    if @score =='Fifteen All'
-      @score = 'Thirty Fifteen'
-    elsif @score =='Thirty All'
-      @score = 'Forty Thirty'
-    elsif @score =='Deuce'
-      @score = 'Advantage Player One'
-    else
-      @score ={
-        'Advantage Player One' => 'Player One Wins',
-        'Love All' => 'Fifteen Love'
-      }[@score]
-    end
+    @score ={
+      'Fifteen All' => 'Thirty Fifteen',
+      'Thirty All' => 'Forty Thirty',
+      'Deuce' => 'Advantage Player One',
+      'Advantage Player One' => 'Player One Wins',
+      'Love All' => 'Fifteen Love'
+    }[@score]
   end
 
   def player2_score
@@ -75,10 +70,5 @@ describe TennisGame do
       expect(game.score).to eq expectation
     end
   end
-
-  def lead_balls(player1_balls, player2_balls)
-
-  end
-
 end
 
