@@ -7,7 +7,7 @@ class TennisGame
   end
 
   RULES = {
-    [0,0] => {player1: [1,0], player2: [0,1], name: 'Love All',},
+    [0,0] => {player2: [0,1], name: 'Love All',},
     [0,1] => {player1: [1,1], player2: [0,2], name: 'Love Fifteen',},
     [0,2] => {player1: [1,2], player2: [0,3], name: 'Love Thirty',},
     [0,3] => {player1: [1,3], player2: [0,4], name: 'Love Forty',},
@@ -29,7 +29,7 @@ class TennisGame
     [0,4] => {name: 'Player Two Wins'},
   }.freeze
 
-  def player1_score = @score = RULES[@score][:player1]
+  def player1_score = @score = RULES[@score].fetch(:player1) {[@score[0] + 1, @score[1]]}
   def player2_score = @score = RULES[@score][:player2]
 
   def score
