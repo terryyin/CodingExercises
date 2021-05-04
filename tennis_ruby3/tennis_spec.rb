@@ -8,14 +8,16 @@ class TennisGame
     @score = 'Love All'
   end
 
-  def player1_score
-    @score ={
+  RULES = {
       'Fifteen All' => 'Thirty Fifteen',
       'Thirty All' => 'Forty Thirty',
       'Deuce' => 'Advantage Player One',
       'Advantage Player One' => 'Player One Wins',
       'Love All' => 'Fifteen Love'
-    }[@score]
+    }
+
+  def player1_score
+    @score =RULES[@score]
   end
 
   def player2_score
