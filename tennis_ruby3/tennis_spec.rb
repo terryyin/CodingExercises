@@ -7,22 +7,6 @@ class TennisGame
     @score = [0, 0]
   end
 
-  NAMES = {
-    [0,0] => '%{0} All',
-    [1,1] => '%{1} All',
-    [2,2] => '%{2} All',
-    [3,3] => 'Deuce',
-    [3,4] => 'Advantage %{p2}',
-    [4,3] => 'Advantage %{p1}',
-    [4,0] => '%{p1} Wins',
-    [4,1] => '%{p1} Wins',
-    [4,2] => '%{p1} Wins',
-    [0,4] => '%{p2} Wins',
-    [1,4] => '%{p2} Wins',
-    [2,4] => '%{p2} Wins',
-  }.freeze
-
-
   def score!(player) = @score = rule[player]
   def score = name % { '0': 'Love', '1': 'Fifteen', '2': 'Thirty', '3': 'Forty', 'p2': 'Player Two', 'p1': 'Player One' }
 
@@ -39,7 +23,24 @@ class TennisGame
     end
   end
 
-  def name = NAMES.fetch(@score, "%{#{@score[0]}} %{#{@score[1]}}")
+  def name
+    case @score
+    in [3, 3]
+      'Deuce'
+    in [a, b] if a == b
+      "%{#{a}} All"
+    in [3, 4]
+      'Advantage %{p2}'
+    in [4, 3]
+      'Advantage %{p1}'
+    in [4, _]
+      '%{p1} Wins'
+    in [_, 4]
+      '%{p2} Wins'
+    else
+      "%{#{@score[0]}} %{#{@score[1]}}"
+    end
+  end
 end
 
 describe TennisGame do
