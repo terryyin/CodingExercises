@@ -7,6 +7,10 @@ class TennisGame
 
   def player2_score
   end
+
+  def score
+
+  end
 end
 
 describe TennisGame do
@@ -31,6 +35,13 @@ describe TennisGame do
         game.player1_score
         game.player2_score
       end
+      (0..(player1_balls - player2_balls)).each do
+        game.player1_score
+      end
+      (0..(player2_balls - player1_balls)).each do
+        game.player2_score
+      end
+      expect(game.score).to eq expectation
     end
   end
 
