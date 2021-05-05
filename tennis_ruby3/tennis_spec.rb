@@ -31,8 +31,8 @@ class TennisGame
       '%{p1} Wins'
     in [_, 4..5]
       '%{p2} Wins'
-    else
-      "%{#{@game_status[0]}} %{#{@game_status[1]}}"
+    in [a, b]
+      "%{#{a}} %{#{b}}"
     end
   end
 end
