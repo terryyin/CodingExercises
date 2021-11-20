@@ -5,11 +5,11 @@ class GameState {
     return this;
   }
 
-  bool alive() {
+  bool alive(Position pos) {
     return false;
   }
 }
 
 class Position {
-  Position(int i, int j);
+  Position();
 }
