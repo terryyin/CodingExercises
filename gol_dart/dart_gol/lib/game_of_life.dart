@@ -1,11 +1,15 @@
 class GameState {
-  GameState.withLifeAt(int i, int j) {}
+  GameState.withLifeAt(Position pos) {}
 
   GameState nextState() {
     return this;
   }
 
   bool alive() {
-    return true;
+    return false;
   }
+}
+
+class Position {
+  Position(int i, int j);
 }
