@@ -15,7 +15,7 @@ class GameState {
 class Position {
   Position();
 
-  neighbours(List<int> list) {
-    return list.map((e) => Position());
+  get neighbours {
+    return List<Position>.generate(8, (n) => Position());
   }
 }
