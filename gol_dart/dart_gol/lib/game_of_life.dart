@@ -1,11 +1,8 @@
 class ALife {
   late final bool result;
-  ALife() {
-    result = false;
-  }
 
   ALife.having(Neighbours neighbours) {
-    result = neighbours.count == 2;
+    result = [2, 3].contains(neighbours.count);
   }
 
   survive() {
