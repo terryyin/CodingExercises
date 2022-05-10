@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "test",
+			"path": "../../test"
+		},
+		{
+			"name": "dart_gol",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
