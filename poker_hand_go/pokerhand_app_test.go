@@ -39,7 +39,7 @@ func leastPowerfulHighCardWithHighest(card string) string {
 }
 
 func handWithOnePairOf(card string) string {
-	return "KH QD JS " + card + "C " + card + "D"
+	return "KH QD 7S " + card + "C " + card + "D"
 }
 
 func game(p1 string, p2 string) string {

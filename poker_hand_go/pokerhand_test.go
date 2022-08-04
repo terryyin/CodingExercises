@@ -32,5 +32,12 @@ func Test_PokerHand(t *testing.T) {
 
 	t.Run("win by one pair vs high card", func(t *testing.T) {
 		assert.True(t, Player1Win(game(handWithOnePairOf("2"), leastPowerfulHighCardWithHighest("AD"))))
+		assert.True(t, Player1Win(game(handWithOnePairOf("8"), leastPowerfulHighCardWithHighest("AD"))))
 	})
+
+	t.Run("one pair vs one pair", func(t *testing.T) {
+		assert.False(t, Player1Win(game(handWithOnePairOf("2"), handWithOnePairOf("3"))))
+		assert.True(t, Player1Win(game(handWithOnePairOf("3"), handWithOnePairOf("2"))))
+	})
+
 }

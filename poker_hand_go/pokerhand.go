@@ -29,17 +29,23 @@ func ProcessLinesFromInput(processor func(string)) {
 	}
 }
 
+type Rank int
+
+func (r Rank) comp(other Rank) int {
+	return int(r - other)
+}
+
 type Card struct {
-	rank int
+	rank Rank
 }
 
 func CreateCard(card string) Card {
-	rank := strings.Index("23456789TJQKA", string(card[0]))
+	rank := Rank(strings.Index("23456789TJQKA", string(card[0])))
 	return Card{rank: rank}
 }
 
 func (c Card) comp(other Card) int {
-	return c.rank - other.rank
+	return c.rank.comp(other.rank)
 }
 
 type Hand struct {
@@ -57,19 +63,28 @@ func CreateHand(cardsString string) Hand {
 	return Hand{cards: cards}
 }
 
-func (h Hand) card(index int) Card {
-	return h.cards[index]
+func (h Hand) Pair() Rank {
+	for i := 0; i < 4; i++ {
+		if h.cards[i].comp(h.cards[i+1]) == 0 {
+			return h.cards[i].rank 
+		}
+	}
+	return -1
 }
 
 func (h Hand) Wins(other Hand) bool {
-	if(h.cards[4].comp(h.cards[3]) == 0) {
+	if h.Pair() != -1 {
+		if other.Pair() != -1 {
+			return h.Pair().comp(other.Pair()) > 0
+		}
 		return true
 	}
+
 	for i := 0; i < 5; i++ {
-		if h.card(i).comp(other.card(i)) == 0 {
+		if h.cards[i].comp(other.cards[i]) == 0 {
 			continue
 		}
-		return h.card(i).comp(other.card(i)) > 0
+		return h.cards[i].comp(other.cards[i]) > 0
 	}
 	return false
 }
