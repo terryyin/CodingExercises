@@ -65,17 +65,15 @@ func (c Cards) PairThen(f func(p Rank))  {
 	c.pairThen(func(i int, p Rank) { f(p) })
 }
 
-func (c Cards) TwoPairs() bool {
-	result := false
-	c.pairThen(func(i int, p Rank) {
+func (c Cards) TwoPairsThen(f func(low Rank, high Rank)) {
+	c.pairThen(func(i int, high Rank) {
 		r := []Card{}
 		r = append(r, c.cards[:i]...)
 		remnent := Cards{cards: append(r, c.cards[i+2:]...)}
-		remnent.pairThen(func(_ int, _p Rank) {
-			result = true
+		remnent.pairThen(func(_ int, low Rank) {
+			f(low, high)
 		})
 	})
-	return result
 }
 
 func (c Cards) compHighCards(other Cards) int {
@@ -104,19 +102,32 @@ func CreateHand(cardsString string) Hand {
 }
 
 func (h Hand) Wins(other Hand) bool {
-	if h.cards.TwoPairs() {
-		return true
+	result := 0
+	h.cards.TwoPairsThen(func(low Rank, high Rank) {
+		result = 1
+		other.cards.TwoPairsThen(func(olow Rank, ohigh Rank) {
+			if (high.comp(ohigh) ==0) {
+				result = low.comp(olow)
+			} else {
+				result = high.comp(ohigh)
+			}
+		})
+	})
+
+	if(result != 0) {
+		return result > 0
 	}
-	result := false
+
+
 	h.cards.PairThen(func(p Rank) {
-		result = true
+		result = 1
 		other.cards.PairThen(func(o Rank) {
-			result = p.comp(o) > 0
+			result = p.comp(o)
 		}) 
 	}) 
 
-	if(result) {
-		return true
+	if(result != 0) {
+		return result > 0
 	}
 
 	return h.cards.compHighCards(other.cards) > 0

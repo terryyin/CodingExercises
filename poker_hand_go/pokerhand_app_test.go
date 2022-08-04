@@ -42,8 +42,12 @@ func handWithOnePairOf(rank string) string {
 	return "KH QD 7S " + rank + "C " + rank + "D"
 }
 
+func handWithOrpanAndTwoPairs(orphan string, rank1 string, rank2 string) string {
+	return orphan + "H " + rank1 + "C " + rank1 + "D " + rank2 + "C " + rank2 + "D"
+}
+
 func handWithTwoPairsOf(rank1 string, rank2 string) string {
-	return "KH " + rank1 + "C " + rank1 + "D " + rank2 + "C " + rank2 + "D"
+	return handWithOrpanAndTwoPairs("K", rank1, rank2)
 }
 
 func game(p1 string, p2 string) string {
