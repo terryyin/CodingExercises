@@ -28,27 +28,47 @@ func ProcessLinesFromInput(processor func(string)) {
 	}
 }
 
-type Hand struct {
-	cards string
+type Card struct {
+	rank int
 }
 
-func (h Hand) card(index int) int {
-	return rank(h.cards[index*3])
+func CreateCard(card string) Card {
+	rank := strings.Index("23456789TJQKA", string(card[0]))
+	return Card{rank: rank}
+}
+
+func (c Card) comp(other Card) int {
+	return c.rank - other.rank
+}
+
+type Hand struct {
+	cards []Card
+}
+
+func CreateHand(cardsString string) Hand {
+	cards := []Card{}
+	for _, c := range strings.Split(cardsString, " ") {
+		cards = append(cards, CreateCard(c))
+	}
+	return Hand{cards: cards}
+}
+
+func (h Hand) card(index int) Card {
+	return h.cards[index]
 }
 
 func (h Hand) Wins(other Hand) bool {
-	if(h.card(4) == other.card(4)) {
-		return h.card(3) > other.card(3)
+	for i := 4; i >= 0; i-- {
+		if h.card(i).comp(other.card(i)) == 0 {
+			continue
+		}
+		return h.card(i).comp(other.card(i)) > 0
 	}
-	return h.card(4) > other.card(4)
+	return true
 }
 
 func Player1Win(game string) bool {
-	h1 := Hand{cards: game[0:13]}
-	h2 := Hand{cards: game[15:]}
+	h1 := CreateHand(game[0:13])
+	h2 := CreateHand(game[15:])
 	return h1.Wins(h2)
-}
-
-func rank(rank byte) int {
-	return strings.Index("23456789TJQKA", string(rank))
 }

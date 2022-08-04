@@ -14,6 +14,10 @@ func Test_PokerHand(t *testing.T) {
 		assert.True(t, Player1Win(highcardGame("AD", "QD")))
 	})
 
+	t.Run("win by highest highcard unordered", func(t *testing.T) {
+		//assert.True(t, Player1Win(highcardGame("9D 6C", "8D 7C")))
+	})
+
 	t.Run("lose by highest highcard", func(t *testing.T) {
 		assert.False(t, Player1Win(highcardGame("8D", "9D")))
 	})
