@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -50,6 +51,9 @@ func CreateHand(cardsString string) Hand {
 	for _, c := range strings.Split(cardsString, " ") {
 		cards = append(cards, CreateCard(c))
 	}
+	sort.Slice(cards, func(i, j int) bool {
+		return cards[i].comp(cards[j]) > 0
+	})
 	return Hand{cards: cards}
 }
 
@@ -58,13 +62,13 @@ func (h Hand) card(index int) Card {
 }
 
 func (h Hand) Wins(other Hand) bool {
-	for i := 4; i >= 0; i-- {
+	for i := 0; i < 5; i++ {
 		if h.card(i).comp(other.card(i)) == 0 {
 			continue
 		}
 		return h.card(i).comp(other.card(i)) > 0
 	}
-	return true
+	return false
 }
 
 func Player1Win(game string) bool {
