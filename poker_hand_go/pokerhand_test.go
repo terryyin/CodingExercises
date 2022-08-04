@@ -40,4 +40,8 @@ func Test_PokerHand(t *testing.T) {
 		assert.True(t, Player1Win(game(handWithOnePairOf("3"), handWithOnePairOf("2"))))
 	})
 
+	t.Run("two pairs vs one pair", func(t *testing.T) {
+		//assert.True(t, Player1Win(game(handWithTwoPairsOf("2", "3"), handWithOnePairOf("4"))))
+	})
+
 }

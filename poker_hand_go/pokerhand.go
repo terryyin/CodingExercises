@@ -48,8 +48,31 @@ func (c Card) comp(other Card) int {
 	return c.rank.comp(other.rank)
 }
 
-type Hand struct {
+type Cards struct {
 	cards []Card
+}
+
+func (c Cards) PairThen(f func(p Rank))  {
+	for i := 0; i < 4; i++ {
+		if c.cards[i].comp(c.cards[i+1]) == 0 {
+			f(c.cards[i].rank)
+			break
+		}
+	}
+}
+
+func (c Cards) compHighCards(other Cards) int {
+	for i, card := range c.cards {
+		if card.comp(other.cards[i]) == 0 {
+			continue
+		}
+		return card.comp(other.cards[i])
+	}
+	return 0
+}
+
+type Hand struct {
+	cards1 Cards
 }
 
 func CreateHand(cardsString string) Hand {
@@ -60,22 +83,14 @@ func CreateHand(cardsString string) Hand {
 	sort.Slice(cards, func(i, j int) bool {
 		return cards[i].comp(cards[j]) > 0
 	})
-	return Hand{cards: cards}
-}
-
-func (h Hand) PairThen(f func(p Rank))  {
-	for i := 0; i < 4; i++ {
-		if h.cards[i].comp(h.cards[i+1]) == 0 {
-			f(h.cards[i].rank)
-		}
-	}
+	return Hand{cards1: Cards{cards: cards}}
 }
 
 func (h Hand) Wins(other Hand) bool {
 	result := false
-	h.PairThen(func(p Rank) {
+	h.cards1.PairThen(func(p Rank) {
 		result = true
-		other.PairThen(func(o Rank) {
+		other.cards1.PairThen(func(o Rank) {
 			result = p.comp(o) > 0
 		}) 
 	}) 
@@ -84,13 +99,7 @@ func (h Hand) Wins(other Hand) bool {
 		return true
 	}
 
-	for i := 0; i < 5; i++ {
-		if h.cards[i].comp(other.cards[i]) == 0 {
-			continue
-		}
-		return h.cards[i].comp(other.cards[i]) > 0
-	}
-	return false
+	return h.cards1.compHighCards(other.cards1) > 0
 }
 
 func Player1Win(game string) bool {
