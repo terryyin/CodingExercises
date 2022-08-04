@@ -63,20 +63,24 @@ func CreateHand(cardsString string) Hand {
 	return Hand{cards: cards}
 }
 
-func (h Hand) Pair() Rank {
+func (h Hand) PairThen(f func(p Rank))  {
 	for i := 0; i < 4; i++ {
 		if h.cards[i].comp(h.cards[i+1]) == 0 {
-			return h.cards[i].rank 
+			f(h.cards[i].rank)
 		}
 	}
-	return -1
 }
 
 func (h Hand) Wins(other Hand) bool {
-	if h.Pair() != -1 {
-		if other.Pair() != -1 {
-			return h.Pair().comp(other.Pair()) > 0
-		}
+	result := false
+	h.PairThen(func(p Rank) {
+		result = true
+		other.PairThen(func(o Rank) {
+			result = p.comp(o) > 0
+		}) 
+	}) 
+
+	if(result) {
 		return true
 	}
 
