@@ -37,6 +37,9 @@ func (h Hand) card(index int) int {
 }
 
 func (h Hand) Wins(other Hand) bool {
+	if(h.card(4) == other.card(4)) {
+		return h.card(3) > other.card(3)
+	}
 	return h.card(4) > other.card(4)
 }
 
