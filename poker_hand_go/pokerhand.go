@@ -62,6 +62,9 @@ func (h Hand) card(index int) Card {
 }
 
 func (h Hand) Wins(other Hand) bool {
+	if(h.cards[4].comp(h.cards[3]) == 0) {
+		return true
+	}
 	for i := 0; i < 5; i++ {
 		if h.card(i).comp(other.card(i)) == 0 {
 			continue

@@ -38,8 +38,16 @@ func leastPowerfulHighCardWithHighest(card string) string {
 	return "2H 3D 4S 5C 7C"[:14-len(card)] + card
 }
 
+func handWithOnePairOf(card string) string {
+	return "KH QD JS " + card + "C " + card + "D"
+}
+
+func game(p1 string, p2 string) string {
+	return p1 + " " + p2
+}
+
 func highcardGame(p1Highest string, p2Highest string) string {
-	return leastPowerfulHighCardWithHighest(p1Highest) + " " + leastPowerfulHighCardWithHighest(p2Highest)
+	return game(leastPowerfulHighCardWithHighest(p1Highest), leastPowerfulHighCardWithHighest(p2Highest))
 }
 
 func runPokerHandApp(input string) string {
