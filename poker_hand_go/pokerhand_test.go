@@ -68,4 +68,8 @@ func Test_PokerHand(t *testing.T) {
 		assertWin(hands.flushStartWith(2), hands.threeOfAkind("2"))
 	})
 
+	t.Run("full house", func(t *testing.T) {
+		assertWin(hands.fullHouse(2, 3), hands.flushStartWith(2))
+	})
+
 }

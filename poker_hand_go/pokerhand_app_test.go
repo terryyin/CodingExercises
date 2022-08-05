@@ -59,6 +59,10 @@ func (e Example) flushStartWith(rank int) string {
 	return fmt.Sprintf("%dH %dD %dS %dC %dD", rank, rank + 1, rank + 2, rank + 3, rank + 4)
 }
 
+func (e Example) fullHouse(rank3 int, rank2 int) string {
+	return fmt.Sprintf("%dH %dD %dS %dC %dD", rank3, rank3, rank3, rank2, rank2)
+}
+
 func game(p1 string, p2 string) string {
 	return p1 + " " + p2
 }

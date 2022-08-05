@@ -43,49 +43,64 @@ type Ranks struct {
 	ranks []Rank
 }
 
+func (c Ranks) withoutRank(rank Rank) Ranks {
+	ranks := []Rank{}
+	for _, r := range c.ranks {
+		if r != rank {
+			ranks = append(ranks, r)
+		}
+	}
+	return Ranks{ranks: ranks}
+}
+
+func (c Ranks) without(rks Ranks) Ranks {
+	return c.withoutRank(rks.ranks[0])
+}
+
 func (c Ranks) All(f func(ranks Ranks)) {
 	f(c)
 }
 
-func (c Ranks) pairThen(f func(index int, p Rank)) {
+func (c Ranks) OnePair(f func(ranks Ranks)) {
 	for i := 0; i < len(c.ranks)-1; i++ {
 		if c.ranks[i].comp(c.ranks[i+1]) == 0 {
-			f(i, c.ranks[i])
+			f(Ranks{ranks: []Rank{c.ranks[i]}})
 			break
 		}
 	}
 }
 
-func (c Ranks) OnePair(f func(ranks Ranks)) {
-	c.pairThen(func(i int, p Rank) { f(Ranks{ranks: []Rank{p}}) })
-}
-
 func (c Ranks) TwoPairs(f func(ranks Ranks)) {
-	c.pairThen(func(i int, high Rank) {
-		r := []Rank{}
-		r = append(r, c.ranks[:i]...)
-		remnent := Ranks{ranks: append(r, c.ranks[i+2:]...)}
-		remnent.pairThen(func(_ int, low Rank) {
-			f(Ranks{ranks: []Rank{low, high}})
+	c.OnePair(func(high Ranks) {
+		c.without(high).OnePair(func(low Ranks) {
+			f(Ranks{ranks: []Rank{high.ranks[0], low.ranks[0]}})
 		})
 	})
 }
 
 func (c Ranks) ThreeOfAKind(f func(ranks Ranks)) {
-	c.pairThen(func(i int, rank Rank) {
-		if i+2 < len(c.ranks) && c.ranks[i+2].comp(rank) == 0 {
-			f(Ranks{ranks: []Rank{rank}})
+	for _, r := range c.ranks {
+		if len(c.ranks)-len(c.withoutRank(r).ranks) == 3 {
+			f(Ranks{ranks: []Rank{r}})
 		}
-	})
+	}
 }
 
 func (c Ranks) Flush(f func(ranks Ranks)) {
 	for i := 0; i < len(c.ranks)-1; i++ {
 		if c.ranks[i].comp(c.ranks[i+1]) != 1 {
-			return;
+			return
 		}
 	}
 	f(Ranks{ranks: []Rank{1}})
+}
+
+func (c Ranks) FullHouse(f func(ranks Ranks)) {
+	c.ThreeOfAKind(func(three Ranks) {
+		c.without(three).OnePair(func(two Ranks) {
+			f(Ranks{ranks: three.ranks})
+		})
+	})
 }
 
 func (c Ranks) compareRanks(other Ranks) int {
@@ -144,6 +159,7 @@ func (r Result) Rule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ra
 
 func (h Hand) Wins(other Hand) bool {
 	return Result{result: 0}.
+		Rule(h, other, Ranks.FullHouse).
 		Rule(h, other, Ranks.Flush).
 		Rule(h, other, Ranks.ThreeOfAKind).
 		Rule(h, other, Ranks.TwoPairs).
