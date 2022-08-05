@@ -89,7 +89,7 @@ func (c Ranks) FourOfAKind(f func(ranks Ranks)) {
 	c.nOfAKind(4, f)
 }
 
-func (c Ranks) Flush(f func(ranks Ranks)) {
+func (c Ranks) Straight(f func(ranks Ranks)) {
 	for i := 0; i < len(c.ranks)-1; i++ {
 		if c.ranks[i].comp(c.ranks[i+1]) != 1 {
 			return
@@ -164,7 +164,7 @@ func (h Hand) Wins(other Hand) bool {
 	return Result{result: 0}.
 		Rule(h, other, Ranks.FourOfAKind).
 		Rule(h, other, Ranks.FullHouse).
-		Rule(h, other, Ranks.Flush).
+		Rule(h, other, Ranks.Straight).
 		Rule(h, other, Ranks.ThreeOfAKind).
 		Rule(h, other, Ranks.TwoPairs).
 		Rule(h, other, Ranks.OnePair).
