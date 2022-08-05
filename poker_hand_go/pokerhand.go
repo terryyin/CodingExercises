@@ -162,19 +162,19 @@ func (h Hand) StraightFlush(f func(ranks Ranks)) {
 	})
 }
 
-func (h Hand) Apply(functor func(hand Hand, f func(r Ranks))) Ranks {
+type Rule func(hand Hand, f func(r Ranks))
+
+func (functor Rule) applyToHandDefaultEmpty(hand Hand) Ranks {
 	result := Ranks{ranks: []Rank{}}
-	functor(h, func(left Ranks) {
+	functor(hand, func(left Ranks) {
 		result = left
 	})
 	return result
 }
 
-type Rule func(hand Hand, f func(r Ranks))
-
 func (functor Rule) Apply(g Game) int {
-	left := g.left.Apply(functor)
-	right := g.right.Apply(functor)
+	left := functor.applyToHandDefaultEmpty(g.left)
+	right := functor.applyToHandDefaultEmpty(g.right)
 	return left.compareRanks(right)
 }
 
