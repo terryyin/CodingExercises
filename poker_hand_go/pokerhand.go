@@ -100,35 +100,36 @@ type Result struct {
 	result int
 }
 
-func (r Result) rule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ranks))) Result {
+func (r Result) oneSideRule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ranks))) Result {
 	if r.result != 0 {
 		return r
 	}
-
 	finder(left.cards, func(left Ranks) {
 		r.result = 1
 		finder(right.cards, func(right Ranks) {
 			r.result = left.compareRanks(right)
 		})
 	})
-
-	if r.result == 0 {
-		finder(right.cards, func(right Ranks) {
-			r.result = -1
-			finder(left.cards, func(left Ranks) {
-				r.result = left.compareRanks(right)
-			})
-		})
-	}
-
 	return r
+}
+
+func (r Result) reverse() Result {
+	return Result{result: -r.result}
+}
+
+func (r Result) Rule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ranks))) Result {
+	next := r.oneSideRule(left, right, finder)
+	if next.result != 0 {
+		return next
+	}
+	return r.oneSideRule(right, left, finder).reverse()
 }
 
 func (h Hand) Wins(other Hand) bool {
 	return Result{result: 0}.
-		rule(h, other, Ranks.TwoPairsThen).
-		rule(h, other, Ranks.PairThen).
-		rule(h, other, Ranks.All).result > 0
+		Rule(h, other, Ranks.TwoPairsThen).
+		Rule(h, other, Ranks.PairThen).
+		Rule(h, other, Ranks.All).result > 0
 }
 
 func Player1Win(game string) bool {
