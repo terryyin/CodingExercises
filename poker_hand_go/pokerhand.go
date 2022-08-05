@@ -29,14 +29,14 @@ func ProcessLinesFromInput(processor func(string)) {
 	}
 }
 
-func RankOfCard(card string) Rank {
-	return Rank(strings.Index("23456789TJQKA", string(card[0])))
+func RankOfCard(rankString string) Rank {
+	return Rank(strings.Index("23456789TJQKA", rankString))
 }
 
 func RanksOfCards(cardsString string) Ranks {
 	ranks := Ranks{}
 	for _, c := range strings.Split(cardsString, " ") {
-		ranks = append(ranks, RankOfCard(c))
+		ranks = append(ranks, RankOfCard(c[0:1]))
 	}
 	sort.Slice(ranks, func(i, j int) bool {
 		return ranks[i].comp(ranks[j]) > 0
@@ -93,7 +93,11 @@ func (ranks Ranks) TwoRepeats(count1 int, count2 int, f Ranker) {
 }
 
 func (ranks Ranks) Straight() bool {
-	for i := 0; i < len(ranks)-1; i++ {
+	i := 0
+	if ranks[0] == RankOfCard("A") && ranks[1] == RankOfCard("5") {
+		i = 1
+	}
+	for ; i < len(ranks)-1; i++ {
 		if ranks[i].comp(ranks[i+1]) != 1 {
 			return false
 		}

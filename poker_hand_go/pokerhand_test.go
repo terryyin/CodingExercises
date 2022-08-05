@@ -37,12 +37,12 @@ func Test_PokerHand(t *testing.T) {
 	})
 
 	t.Run("win by one pair vs high card", func(t *testing.T) {
-		assertWin(hands.onePairOf("2"), hands.highCardEndWith("AD"))
-		assertWin(hands.onePairOf("8"), hands.highCardEndWith("AD"))
+		assertWin(hands.onePairOf("2"), hands.highCardEndWith("KD"))
+		assertWin(hands.onePairOf("8"), hands.highCardEndWith("KD"))
 	})
 
 	t.Run("lose by high card vs one pair", func(t *testing.T) {
-		assertNotWin(hands.highCardEndWith("AD"), hands.onePairOf("2"))
+		assertNotWin(hands.highCardEndWith("KD"), hands.onePairOf("2"))
 	})
 
 	t.Run("one pair vs one pair", func(t *testing.T) {
@@ -66,6 +66,7 @@ func Test_PokerHand(t *testing.T) {
 
 	t.Run("straight", func(t *testing.T) {
 		assertWin(hands.straightStartWith(2), hands.threeOfAkind("2"))
+		assertWin("2D 3H 4H 5H AH", hands.threeOfAkind("2"))
 	})
 
 	t.Run("flush", func(t *testing.T) {
