@@ -57,17 +57,20 @@ func (c Ranks) without(rks Ranks) Ranks {
 	return c.withoutRank(rks.ranks[0])
 }
 
+func (c Ranks) nOfAKind(n int, f func(ranks Ranks)) {
+	for _, r := range c.ranks {
+		if len(c.ranks)-len(c.withoutRank(r).ranks) == n {
+			f(Ranks{ranks: []Rank{r}})
+		}
+	}
+}
+
 func (c Ranks) All(f func(ranks Ranks)) {
 	f(c)
 }
 
 func (c Ranks) OnePair(f func(ranks Ranks)) {
-	for i := 0; i < len(c.ranks)-1; i++ {
-		if c.ranks[i].comp(c.ranks[i+1]) == 0 {
-			f(Ranks{ranks: []Rank{c.ranks[i]}})
-			break
-		}
-	}
+	c.nOfAKind(2, f)
 }
 
 func (c Ranks) TwoPairs(f func(ranks Ranks)) {
@@ -79,11 +82,11 @@ func (c Ranks) TwoPairs(f func(ranks Ranks)) {
 }
 
 func (c Ranks) ThreeOfAKind(f func(ranks Ranks)) {
-	for _, r := range c.ranks {
-		if len(c.ranks)-len(c.withoutRank(r).ranks) == 3 {
-			f(Ranks{ranks: []Rank{r}})
-		}
-	}
+	c.nOfAKind(3, f)
+}
+
+func (c Ranks) FourOfAKind(f func(ranks Ranks)) {
+	c.nOfAKind(4, f)
 }
 
 func (c Ranks) Flush(f func(ranks Ranks)) {
@@ -159,6 +162,7 @@ func (r Result) Rule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ra
 
 func (h Hand) Wins(other Hand) bool {
 	return Result{result: 0}.
+		Rule(h, other, Ranks.FourOfAKind).
 		Rule(h, other, Ranks.FullHouse).
 		Rule(h, other, Ranks.Flush).
 		Rule(h, other, Ranks.ThreeOfAKind).

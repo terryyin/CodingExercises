@@ -63,6 +63,10 @@ func (e Example) fullHouse(rank3 int, rank2 int) string {
 	return fmt.Sprintf("%dH %dD %dS %dC %dD", rank3, rank3, rank3, rank2, rank2)
 }
 
+func (e Example) fourOfAKind(rank int) string {
+	return fmt.Sprintf("2H %dD %dS %dC %dD", rank, rank, rank, rank)
+}
+
 func game(p1 string, p2 string) string {
 	return p1 + " " + p2
 }

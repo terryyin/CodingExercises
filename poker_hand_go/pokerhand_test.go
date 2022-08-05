@@ -72,4 +72,8 @@ func Test_PokerHand(t *testing.T) {
 		assertWin(hands.fullHouse(2, 3), hands.flushStartWith(2))
 	})
 
+	t.Run("four of a kind", func(t *testing.T) {
+		assertWin(hands.fourOfAKind(3), hands.fullHouse(2, 3))
+	})
+
 }
