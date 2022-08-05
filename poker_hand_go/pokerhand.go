@@ -35,15 +35,11 @@ func (r Rank) comp(other Rank) int {
 	return int(r - other)
 }
 
-func RankOfCard(card string) Rank {
-	return Rank(strings.Index("23456789TJQKA", string(card[0])))
-}
-
 type Ranks struct {
 	ranks []Rank
 }
 
-func (c Ranks) withoutRank(rank Rank) Ranks {
+func (c Ranks) without(rank Rank) Ranks {
 	ranks := []Rank{}
 	for _, r := range c.ranks {
 		if r != rank {
@@ -53,16 +49,20 @@ func (c Ranks) withoutRank(rank Rank) Ranks {
 	return Ranks{ranks: ranks}
 }
 
-func (c Ranks) without(rks Ranks) Ranks {
-	return c.withoutRank(rks.ranks[0])
-}
-
-func (c Ranks) nOfAKind(n int, f func(ranks Ranks)) {
+func (c Ranks) nOfAKind(n int, f Ranker) {
 	for _, r := range c.ranks {
-		if len(c.ranks)-len(c.withoutRank(r).ranks) == n {
+		if len(c.ranks)-len(c.without(r).ranks) == n {
 			f(Ranks{ranks: []Rank{r}})
 		}
 	}
+}
+
+func (c Ranks) TwoRepeats(count1 int, count2 int, f Ranker) {
+	c.nOfAKind(count1, func(first Ranks) {
+		c.without(first.ranks[0]).nOfAKind(count2, func(second Ranks) {
+			f(Ranks{ranks: []Rank{first.ranks[0], second.ranks[0]}})
+		})
+	})
 }
 
 func (c Ranks) Straight() bool {
@@ -93,68 +93,46 @@ func (c Ranks) compareRanks(other Ranks) int {
 
 type Hand struct {
 	ranks Ranks
-	flush int
+	flush bool
 }
 
-func CreateHand(cardsString string) Hand {
-	ranks := []Rank{}
-	for _, c := range strings.Split(cardsString, " ") {
-		ranks = append(ranks, RankOfCard(c))
-	}
-	sort.Slice(ranks, func(i, j int) bool {
-		return ranks[i].comp(ranks[j]) > 0
-	})
-	return Hand{
-		ranks: Ranks{ranks: ranks},
-		flush: strings.Count(cardsString, cardsString[1:2]),
-	}
-}
-
-func (h Hand) All(f func(ranks Ranks)) {
+func (h Hand) All(f Ranker) {
 	f(h.ranks)
 }
 
-func (h Hand) FourOfAKind(f func(ranks Ranks)) {
+func (h Hand) FourOfAKind(f Ranker) {
 	h.ranks.nOfAKind(4, f)
 }
 
-func (h Hand) Straight(f func(ranks Ranks)) {
+func (h Hand) Straight(f Ranker) {
 	if h.ranks.Straight() {
-		f(Ranks{ranks: []Rank{1}})
-	}
-}
-
-func (h Hand) OnePair(f func(ranks Ranks)) {
-	h.ranks.nOfAKind(2, f)
-}
-
-func (h Hand) TwoPairs(f func(ranks Ranks)) {
-	h.OnePair(func(high Ranks) {
-		h.ranks.without(high).nOfAKind(2, func(low Ranks) {
-			f(Ranks{ranks: []Rank{high.ranks[0], low.ranks[0]}})
-		})
-	})
-}
-
-func (h Hand) ThreeOfAKind(f func(ranks Ranks)) {
-	h.ranks.nOfAKind(3, f)
-}
-
-func (h Hand) FullHouse(f func(ranks Ranks)) {
-	h.ThreeOfAKind(func(three Ranks) {
-		h.ranks.without(three).nOfAKind(2, func(two Ranks) {
-			f(Ranks{ranks: three.ranks})
-		})
-	})
-}
-
-func (h Hand) Flush(f func(ranks Ranks)) {
-	if h.flush == 5 {
 		f(h.ranks)
 	}
 }
 
-func (h Hand) StraightFlush(f func(ranks Ranks)) {
+func (h Hand) OnePair(f Ranker) {
+	h.ranks.nOfAKind(2, f)
+}
+
+func (h Hand) TwoPairs(f Ranker) {
+	h.ranks.TwoRepeats(2, 2, f)
+}
+
+func (h Hand) ThreeOfAKind(f Ranker) {
+	h.ranks.nOfAKind(3, f)
+}
+
+func (h Hand) FullHouse(f Ranker) {
+	h.ranks.TwoRepeats(3, 2, f)
+}
+
+func (h Hand) Flush(f Ranker) {
+	if h.flush {
+		f(h.ranks)
+	}
+}
+
+func (h Hand) StraightFlush(f Ranker) {
 	h.Straight(func(straight Ranks) {
 		h.Flush(func(flush Ranks) {
 			f(h.ranks)
@@ -162,7 +140,8 @@ func (h Hand) StraightFlush(f func(ranks Ranks)) {
 	})
 }
 
-type Rule func(hand Hand, f func(r Ranks))
+type Ranker func(r Ranks)
+type Rule func(hand Hand, f Ranker)
 
 func (functor Rule) applyToHandDefaultEmpty(hand Hand) Ranks {
 	result := Ranks{ranks: []Rank{}}
@@ -181,6 +160,24 @@ func (functor Rule) Apply(g Game) int {
 type Game struct {
 	left  Hand
 	right Hand
+}
+
+func RankOfCard(card string) Rank {
+	return Rank(strings.Index("23456789TJQKA", string(card[0])))
+}
+
+func CreateHand(cardsString string) Hand {
+	ranks := []Rank{}
+	for _, c := range strings.Split(cardsString, " ") {
+		ranks = append(ranks, RankOfCard(c))
+	}
+	sort.Slice(ranks, func(i, j int) bool {
+		return ranks[i].comp(ranks[j]) > 0
+	})
+	return Hand{
+		ranks: Ranks{ranks: ranks},
+		flush: strings.Count(cardsString, cardsString[1:2]) == 5,
+	}
 }
 
 func CreateGame(game string) Game {
