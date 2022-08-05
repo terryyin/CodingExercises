@@ -172,6 +172,12 @@ func (h Hand) Apply(functor func(hand Hand, f func(r Ranks))) Ranks {
 
 type Rule func(hand Hand, f func(r Ranks))
 
+func (functor Rule) Apply(g Game) int {
+	left := g.left.Apply(functor)
+	right := g.right.Apply(functor)
+	return left.compareRanks(right)
+}
+
 type Game struct {
 	left  Hand
 	right Hand
@@ -184,15 +190,9 @@ func CreateGame(game string) Game {
 	}
 }
 
-func (g Game) Rule(functor Rule) int {
-	left := g.left.Apply(functor)
-	right := g.right.Apply(functor)
-	return left.compareRanks(right)
-}
-
 func (g Game) Exec(rules []Rule) int {
-	for _, l := range rules {
-		result := g.Rule(l)
+	for _, rule := range rules {
+		result := rule.Apply(g)
 		if result != 0 {
 			return result
 		}
