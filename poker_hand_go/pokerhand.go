@@ -11,7 +11,7 @@ import (
 func main() {
 	count := 0
 	ProcessLinesFromInput(func(game string) {
-		if Player1Win(game) {
+		if CreateGame(game).Compare() > 0 {
 			count++
 		}
 	})
@@ -184,21 +184,26 @@ func (r Result) Rule(left Hand, right Hand, functor func(hand Hand, f func(r Ran
 	return r.oneSideRule(right, left, functor).reverse()
 }
 
-func (h Hand) Wins(other Hand) bool {
-	return Result{result: 0}.
-		Rule(h, other, Hand.StraightFlush).
-		Rule(h, other, Hand.FourOfAKind).
-		Rule(h, other, Hand.FullHouse).
-		Rule(h, other, Hand.Flush).
-		Rule(h, other, Hand.Straight).
-		Rule(h, other, Hand.ThreeOfAKind).
-		Rule(h, other, Hand.TwoPairs).
-		Rule(h, other, Hand.OnePair).
-		Rule(h, other, Hand.All).result > 0
+type Game struct {
+	left  Hand
+	right Hand
 }
 
-func Player1Win(game string) bool {
-	h1 := CreateHand(game[0:14])
-	h2 := CreateHand(game[15:])
-	return h1.Wins(h2)
+func CreateGame(game string) Game {
+	return Game{
+		left:  CreateHand(game[0:14]),
+		right: CreateHand(game[15:]),
+	}
+}
+func (g Game) Compare() int {
+	return Result{result: 0}.
+		Rule(g.left, g.right, Hand.StraightFlush).
+		Rule(g.left, g.right, Hand.FourOfAKind).
+		Rule(g.left, g.right, Hand.FullHouse).
+		Rule(g.left, g.right, Hand.Flush).
+		Rule(g.left, g.right, Hand.Straight).
+		Rule(g.left, g.right, Hand.ThreeOfAKind).
+		Rule(g.left, g.right, Hand.TwoPairs).
+		Rule(g.left, g.right, Hand.OnePair).
+		Rule(g.left, g.right, Hand.All).result
 }
