@@ -56,11 +56,11 @@ func (c Ranks) pairThen(f func(index int, p Rank)) {
 	}
 }
 
-func (c Ranks) PairThen(f func(ranks Ranks)) {
+func (c Ranks) OnePair(f func(ranks Ranks)) {
 	c.pairThen(func(i int, p Rank) { f(Ranks{ranks: []Rank{p}}) })
 }
 
-func (c Ranks) TwoPairsThen(f func(ranks Ranks)) {
+func (c Ranks) TwoPairs(f func(ranks Ranks)) {
 	c.pairThen(func(i int, high Rank) {
 		r := []Rank{}
 		r = append(r, c.ranks[:i]...)
@@ -77,6 +77,15 @@ func (c Ranks) ThreeOfAKind(f func(ranks Ranks)) {
 			f(Ranks{ranks: []Rank{rank}})
 		}
 	})
+}
+
+func (c Ranks) Flush(f func(ranks Ranks)) {
+	for i := 0; i < len(c.ranks)-1; i++ {
+		if c.ranks[i].comp(c.ranks[i+1]) != 1 {
+			return;
+		}
+	}
+	f(Ranks{ranks: []Rank{1}})
 }
 
 func (c Ranks) compareRanks(other Ranks) int {
@@ -135,9 +144,10 @@ func (r Result) Rule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ra
 
 func (h Hand) Wins(other Hand) bool {
 	return Result{result: 0}.
+		Rule(h, other, Ranks.Flush).
 		Rule(h, other, Ranks.ThreeOfAKind).
-		Rule(h, other, Ranks.TwoPairsThen).
-		Rule(h, other, Ranks.PairThen).
+		Rule(h, other, Ranks.TwoPairs).
+		Rule(h, other, Ranks.OnePair).
 		Rule(h, other, Ranks.All).result > 0
 }
 

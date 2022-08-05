@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"os/exec"
 	"testing"
@@ -52,6 +53,10 @@ func (e Example) orpanAndTwoPairs(orphan string, rank1 string, rank2 string) str
 
 func (e Example) twoPairsOf(rank1 string, rank2 string) string {
 	return e.orpanAndTwoPairs("K", rank1, rank2)
+}
+
+func (e Example) flushStartWith(rank int) string {
+	return fmt.Sprintf("%dH %dD %dS %dC %dD", rank, rank + 1, rank + 2, rank + 3, rank + 4)
 }
 
 func game(p1 string, p2 string) string {
