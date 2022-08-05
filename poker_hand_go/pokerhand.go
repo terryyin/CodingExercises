@@ -52,12 +52,8 @@ func (c Ranks) pairThen(f func(index int, p Rank)) {
 	}
 }
 
-func (c Ranks) PairThen() Ranks {
-	ranks := []Rank{}
-	c.pairThen(func(i int, p Rank) {
-		ranks = append(ranks, p)
-	})
-	return Ranks{ranks: ranks}
+func (c Ranks) PairThen(f func(ranks Ranks)) {
+	c.pairThen(func(i int, p Rank) { f(Ranks{ranks: []Rank{p}}) })
 }
 
 func (c Ranks) TwoPairsThen(f func(ranks Ranks)) {
@@ -71,21 +67,14 @@ func (c Ranks) TwoPairsThen(f func(ranks Ranks)) {
 	})
 }
 
-func min(a, b int) int {
-    if a < b {
-        return a
-    }
-    return b
-}
-
 func (c Ranks) compareRanks(other Ranks) int {
-	for i := 0; i < min(len(c.ranks), len(other.ranks)); i++ {
-		if c.ranks[i].comp(other.ranks[i]) == 0 {
+	for i, card := range c.ranks {
+		if card.comp(other.ranks[i]) == 0 {
 			continue
 		}
-		return c.ranks[i].comp(other.ranks[i])
+		return card.comp(other.ranks[i])
 	}
-	return len(c.ranks) - len(other.ranks)
+	return 0
 }
 
 type Hand struct {
@@ -103,23 +92,37 @@ func CreateHand(cardsString string) Hand {
 	return Hand{cards: Ranks{ranks: ranks}}
 }
 
-func (h Hand) Wins(other Hand) bool {
+func rule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ranks))) int {
 	result := 0
-	h.cards.TwoPairsThen(func(left Ranks) {
+	finder(left.cards, func(left Ranks) {
 		result = 1
-		other.cards.TwoPairsThen(func(right Ranks) {
+		finder(right.cards, func(right Ranks) {
 			result = left.compareRanks(right)
 		})
 	})
+
+	if result == 0 {
+		finder(right.cards, func(right Ranks) {
+			result = -1
+			finder(left.cards, func(left Ranks) {
+				result = left.compareRanks(right)
+			})
+		})
+	}
+
+	return result
+}
+
+func (h Hand) Wins(other Hand) bool {
+	result := 0
+
+	result = rule(h, other, Ranks.TwoPairsThen)
 
 	if result != 0 {
 		return result > 0
 	}
 
-	leftPairs := h.cards.PairThen()
-	rightPairs := other.cards.PairThen()
-
-	result = leftPairs.compareRanks(rightPairs)
+	result = rule(h, other, Ranks.PairThen)
 
 	if result != 0 {
 		return result > 0
