@@ -29,6 +29,33 @@ func ProcessLinesFromInput(processor func(string)) {
 	}
 }
 
+func RankOfCard(card string) Rank {
+	return Rank(strings.Index("23456789TJQKA", string(card[0])))
+}
+
+func RanksOfCards(cardsString string) Ranks {
+	ranks := Ranks{}
+	for _, c := range strings.Split(cardsString, " ") {
+		ranks = append(ranks, RankOfCard(c))
+	}
+	sort.Sort(ranks)
+	return ranks
+}
+
+func CreateHand(cardsString string) Hand {
+	return Hand{
+		ranks: RanksOfCards(cardsString),
+		flush: strings.Count(cardsString, cardsString[1:2]) == 5,
+	}
+}
+
+func CreateGame(game string) Game {
+	return Game{
+		left:  CreateHand(game[0:14]),
+		right: CreateHand(game[15:]),
+	}
+}
+
 type Rank int
 
 func (r Rank) comp(other Rank) int {
@@ -36,6 +63,10 @@ func (r Rank) comp(other Rank) int {
 }
 
 type Ranks []Rank
+
+func (r Ranks) Len() int           { return len(r) }
+func (r Ranks) Swap(i, j int)      { r[i], r[j] = r[j], r[i] }
+func (r Ranks) Less(i, j int) bool { return r[i].comp(r[j]) > 0 }
 
 func (ranks Ranks) without(rank Rank) Ranks {
 	result := Ranks{}
@@ -158,31 +189,6 @@ func (functor Rule) Apply(g Game) int {
 type Game struct {
 	left  Hand
 	right Hand
-}
-
-func RankOfCard(card string) Rank {
-	return Rank(strings.Index("23456789TJQKA", string(card[0])))
-}
-
-func CreateHand(cardsString string) Hand {
-	ranks := Ranks{}
-	for _, c := range strings.Split(cardsString, " ") {
-		ranks = append(ranks, RankOfCard(c))
-	}
-	sort.Slice(ranks, func(i, j int) bool {
-		return ranks[i].comp(ranks[j]) > 0
-	})
-	return Hand{
-		ranks: ranks,
-		flush: strings.Count(cardsString, cardsString[1:2]) == 5,
-	}
-}
-
-func CreateGame(game string) Game {
-	return Game{
-		left:  CreateHand(game[0:14]),
-		right: CreateHand(game[15:]),
-	}
 }
 
 func (g Game) Exec(rules ...Rule) int {
