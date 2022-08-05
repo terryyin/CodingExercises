@@ -71,6 +71,10 @@ func (e Example) fourOfAKind(rank int) string {
 	return fmt.Sprintf("2H %dD %dS %dC %dD", rank, rank, rank, rank)
 }
 
+func (e Example) straightFlush() string {
+	return "2H 3H 4H 5H 6H"
+}
+
 func game(p1 string, p2 string) string {
 	return p1 + " " + p2
 }

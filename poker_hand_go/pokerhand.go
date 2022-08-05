@@ -147,6 +147,14 @@ func (h Hand) Flush(f func(ranks Ranks)) {
 	}
 }
 
+func (h Hand) StraightFlush(f func(ranks Ranks)) {
+	h.Straight(func(straight Ranks) {
+		h.Flush(func(flush Ranks) {
+			f(h.ranks)
+		})
+	})
+}
+
 type Result struct {
 	result int
 }
@@ -178,6 +186,7 @@ func (r Result) Rule(left Hand, right Hand, functor func(hand Hand, f func(r Ran
 
 func (h Hand) Wins(other Hand) bool {
 	return Result{result: 0}.
+		Rule(h, other, Hand.StraightFlush).
 		Rule(h, other, Hand.FourOfAKind).
 		Rule(h, other, Hand.FullHouse).
 		Rule(h, other, Hand.Flush).
