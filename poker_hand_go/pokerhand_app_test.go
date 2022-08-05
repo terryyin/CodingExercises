@@ -42,6 +42,10 @@ func handWithOnePairOf(rank string) string {
 	return "KH QD 7S " + rank + "C " + rank + "D"
 }
 
+func threeOfAkind(rank string) string {
+	return "KH QD " + rank + "C " + rank + "D " + rank + "D"
+}
+
 func handWithOrpanAndTwoPairs(orphan string, rank1 string, rank2 string) string {
 	return orphan + "H " + rank1 + "C " + rank1 + "D " + rank2 + "C " + rank2 + "D"
 }

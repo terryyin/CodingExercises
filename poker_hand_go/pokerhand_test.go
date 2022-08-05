@@ -60,4 +60,8 @@ func Test_PokerHand(t *testing.T) {
 		assertWin(game(handWithOrpanAndTwoPairs("Q", "4", "5"), handWithTwoPairsOf("3", "5")))
 	})
 
+	t.Run("three of a kind", func(t *testing.T) {
+		assertWin(game(threeOfAkind("2"), handWithTwoPairsOf("3", "4")))
+	})
+
 }

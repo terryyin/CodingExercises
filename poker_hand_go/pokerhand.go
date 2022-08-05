@@ -71,6 +71,14 @@ func (c Ranks) TwoPairsThen(f func(ranks Ranks)) {
 	})
 }
 
+func (c Ranks) ThreeOfAKind(f func(ranks Ranks)) {
+	c.pairThen(func(i int, rank Rank) {
+		if i+2 < len(c.ranks) && c.ranks[i+2].comp(rank) == 0 {
+			f(Ranks{ranks: []Rank{rank}})
+		}
+	})
+}
+
 func (c Ranks) compareRanks(other Ranks) int {
 	for i, card := range c.ranks {
 		if card.comp(other.ranks[i]) == 0 {
@@ -127,6 +135,7 @@ func (r Result) Rule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ra
 
 func (h Hand) Wins(other Hand) bool {
 	return Result{result: 0}.
+		Rule(h, other, Ranks.ThreeOfAKind).
 		Rule(h, other, Ranks.TwoPairsThen).
 		Rule(h, other, Ranks.PairThen).
 		Rule(h, other, Ranks.All).result > 0
