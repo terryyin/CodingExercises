@@ -65,45 +65,13 @@ func (c Ranks) nOfAKind(n int, f func(ranks Ranks)) {
 	}
 }
 
-func (c Ranks) All(f func(ranks Ranks)) {
-	f(c)
-}
-
-func (c Ranks) OnePair(f func(ranks Ranks)) {
-	c.nOfAKind(2, f)
-}
-
-func (c Ranks) TwoPairs(f func(ranks Ranks)) {
-	c.OnePair(func(high Ranks) {
-		c.without(high).OnePair(func(low Ranks) {
-			f(Ranks{ranks: []Rank{high.ranks[0], low.ranks[0]}})
-		})
-	})
-}
-
-func (c Ranks) ThreeOfAKind(f func(ranks Ranks)) {
-	c.nOfAKind(3, f)
-}
-
-func (c Ranks) FourOfAKind(f func(ranks Ranks)) {
-	c.nOfAKind(4, f)
-}
-
-func (c Ranks) Straight(f func(ranks Ranks)) {
+func (c Ranks) Straight() bool {
 	for i := 0; i < len(c.ranks)-1; i++ {
 		if c.ranks[i].comp(c.ranks[i+1]) != 1 {
-			return
+			return false
 		}
 	}
-	f(Ranks{ranks: []Rank{1}})
-}
-
-func (c Ranks) FullHouse(f func(ranks Ranks)) {
-	c.ThreeOfAKind(func(three Ranks) {
-		c.without(three).OnePair(func(two Ranks) {
-			f(Ranks{ranks: three.ranks})
-		})
-	})
+	return true
 }
 
 func (c Ranks) compareRanks(other Ranks) int {
@@ -117,7 +85,8 @@ func (c Ranks) compareRanks(other Ranks) int {
 }
 
 type Hand struct {
-	cards Ranks
+	ranks Ranks
+	flush int
 }
 
 func CreateHand(cardsString string) Hand {
@@ -128,47 +97,88 @@ func CreateHand(cardsString string) Hand {
 	sort.Slice(ranks, func(i, j int) bool {
 		return ranks[i].comp(ranks[j]) > 0
 	})
-	return Hand{cards: Ranks{ranks: ranks}}
+	return Hand{
+		ranks: Ranks{ranks: ranks},
+		flush: strings.Count(cardsString, cardsString[1:2]),
+	}
+}
+
+func (h Hand) All(f func(ranks Ranks)) {
+	f(h.ranks)
+}
+
+func (h Hand) FourOfAKind(f func(ranks Ranks)) {
+	h.ranks.nOfAKind(4, f)
+}
+
+func (h Hand) Straight(f func(ranks Ranks)) {
+	if h.ranks.Straight() {
+		f(Ranks{ranks: []Rank{1}})
+	}
+}
+
+func (h Hand) OnePair(f func(ranks Ranks)) {
+	h.ranks.nOfAKind(2, f)
+}
+
+func (h Hand) TwoPairs(f func(ranks Ranks)) {
+	h.OnePair(func(high Ranks) {
+		h.ranks.without(high).nOfAKind(2, func(low Ranks) {
+			f(Ranks{ranks: []Rank{high.ranks[0], low.ranks[0]}})
+		})
+	})
+}
+
+func (h Hand) ThreeOfAKind(f func(ranks Ranks)) {
+	h.ranks.nOfAKind(3, f)
+}
+
+func (h Hand) FullHouse(f func(ranks Ranks)) {
+	h.ThreeOfAKind(func(three Ranks) {
+		h.ranks.without(three).nOfAKind(2, func(two Ranks) {
+			f(Ranks{ranks: three.ranks})
+		})
+	})
 }
 
 type Result struct {
 	result int
 }
 
-func (r Result) oneSideRule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ranks))) Result {
+func (r Result) reverse() Result {
+	return Result{result: -r.result}
+}
+
+func (r Result) oneSideRule(left Hand, right Hand, functor func(hand Hand, f func(r Ranks))) Result {
 	if r.result != 0 {
 		return r
 	}
-	finder(left.cards, func(left Ranks) {
+	functor(left, func(left Ranks) {
 		r.result = 1
-		finder(right.cards, func(right Ranks) {
+		functor(right, func(right Ranks) {
 			r.result = left.compareRanks(right)
 		})
 	})
 	return r
 }
 
-func (r Result) reverse() Result {
-	return Result{result: -r.result}
-}
-
-func (r Result) Rule(left Hand, right Hand, finder func(ranks Ranks, f func(r Ranks))) Result {
-	next := r.oneSideRule(left, right, finder)
+func (r Result) Rule(left Hand, right Hand, functor func(hand Hand, f func(r Ranks))) Result {
+	next := r.oneSideRule(left, right, functor)
 	if next.result != 0 {
 		return next
 	}
-	return r.oneSideRule(right, left, finder).reverse()
+	return r.oneSideRule(right, left, functor).reverse()
 }
 
 func (h Hand) Wins(other Hand) bool {
 	return Result{result: 0}.
-		Rule(h, other, Ranks.FourOfAKind).
-		Rule(h, other, Ranks.FullHouse).
-		Rule(h, other, Ranks.Straight).
-		Rule(h, other, Ranks.ThreeOfAKind).
-		Rule(h, other, Ranks.TwoPairs).
-		Rule(h, other, Ranks.OnePair).
-		Rule(h, other, Ranks.All).result > 0
+		Rule(h, other, Hand.FourOfAKind).
+		Rule(h, other, Hand.FullHouse).
+		Rule(h, other, Hand.Straight).
+		Rule(h, other, Hand.ThreeOfAKind).
+		Rule(h, other, Hand.TwoPairs).
+		Rule(h, other, Hand.OnePair).
+		Rule(h, other, Hand.All).result > 0
 }
 
 func Player1Win(game string) bool {

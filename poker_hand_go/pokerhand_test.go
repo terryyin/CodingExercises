@@ -8,10 +8,10 @@ import (
 
 func Test_PokerHand(t *testing.T) {
 	assertWin := func(left string, right string) {
-		assert.Truef(t, Player1Win(game(left, right)), "game: %v vs %v", left, right)
+		assert.Truef(t, Player1Win(game(left, right)), "game: %v vs %v", CreateHand(left), CreateHand(right))
 	}
 	assertNotWin := func(left string, right string) {
-		assert.Falsef(t, Player1Win(game(left, right)), "game: %v vs %v", left, right)
+		assert.Falsef(t, Player1Win(game(left, right)), "game: %v vs %v", CreateHand(left), CreateHand(right))
 	}
 
 	t.Run("win by highest highcard", func(t *testing.T) {
@@ -66,6 +66,10 @@ func Test_PokerHand(t *testing.T) {
 
 	t.Run("straight", func(t *testing.T) {
 		assertWin(hands.straightStartWith(2), hands.threeOfAkind("2"))
+	})
+
+	t.Run("flush", func(t *testing.T) {
+		//assertWin(hands.flush(), hands.straightStartWith(2))
 	})
 
 	t.Run("full house", func(t *testing.T) {
