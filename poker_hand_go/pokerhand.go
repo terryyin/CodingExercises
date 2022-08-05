@@ -159,29 +159,24 @@ type Result struct {
 	result int
 }
 
-func (r Result) reverse() Result {
-	return Result{result: -r.result}
-}
-
-func (r Result) oneSideRule(left Hand, right Hand, functor func(hand Hand, f func(r Ranks))) Result {
+func (r Result) Rule(game Game, functor func(hand Hand, f func(r Ranks))) Result {
 	if r.result != 0 {
 		return r
 	}
-	functor(left, func(left Ranks) {
+	bingo := false
+	functor(game.left, func(left Ranks) {
+		bingo = true
 		r.result = 1
-		functor(right, func(right Ranks) {
+		functor(game.right, func(right Ranks) {
 			r.result = left.compareRanks(right)
 		})
 	})
-	return r
-}
-
-func (r Result) Rule(left Hand, right Hand, functor func(hand Hand, f func(r Ranks))) Result {
-	next := r.oneSideRule(left, right, functor)
-	if next.result != 0 {
-		return next
+	if !bingo {
+		functor(game.right, func(left Ranks) {
+			r.result = -1
+		})
 	}
-	return r.oneSideRule(right, left, functor).reverse()
+	return r
 }
 
 type Game struct {
@@ -197,13 +192,13 @@ func CreateGame(game string) Game {
 }
 func (g Game) Compare() int {
 	return Result{result: 0}.
-		Rule(g.left, g.right, Hand.StraightFlush).
-		Rule(g.left, g.right, Hand.FourOfAKind).
-		Rule(g.left, g.right, Hand.FullHouse).
-		Rule(g.left, g.right, Hand.Flush).
-		Rule(g.left, g.right, Hand.Straight).
-		Rule(g.left, g.right, Hand.ThreeOfAKind).
-		Rule(g.left, g.right, Hand.TwoPairs).
-		Rule(g.left, g.right, Hand.OnePair).
-		Rule(g.left, g.right, Hand.All).result
+		Rule(g, Hand.StraightFlush).
+		Rule(g, Hand.FourOfAKind).
+		Rule(g, Hand.FullHouse).
+		Rule(g, Hand.Flush).
+		Rule(g, Hand.Straight).
+		Rule(g, Hand.ThreeOfAKind).
+		Rule(g, Hand.TwoPairs).
+		Rule(g, Hand.OnePair).
+		Rule(g, Hand.All).result
 }
