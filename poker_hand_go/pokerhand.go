@@ -74,14 +74,21 @@ func (c Ranks) Straight() bool {
 	return true
 }
 
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 func (c Ranks) compareRanks(other Ranks) int {
-	for i, card := range c.ranks {
-		if card.comp(other.ranks[i]) == 0 {
+	for i := 0; i < min(len(c.ranks), len(other.ranks)); i++ {
+		if c.ranks[i].comp(other.ranks[i]) == 0 {
 			continue
 		}
-		return card.comp(other.ranks[i])
+		return c.ranks[i].comp(other.ranks[i])
 	}
-	return 0
+	return len(c.ranks) - len(other.ranks)
 }
 
 type Hand struct {
@@ -155,6 +162,14 @@ func (h Hand) StraightFlush(f func(ranks Ranks)) {
 	})
 }
 
+func (h Hand) Apply(functor func(hand Hand, f func(r Ranks))) Ranks {
+	result := Ranks{ranks: []Rank{}}
+	functor(h, func(left Ranks) {
+		result = left
+	})
+	return result
+}
+
 type Result struct {
 	result int
 }
@@ -163,20 +178,9 @@ func (r Result) Rule(game Game, functor func(hand Hand, f func(r Ranks))) Result
 	if r.result != 0 {
 		return r
 	}
-	bingo := false
-	functor(game.left, func(left Ranks) {
-		bingo = true
-		r.result = 1
-		functor(game.right, func(right Ranks) {
-			r.result = left.compareRanks(right)
-		})
-	})
-	if !bingo {
-		functor(game.right, func(left Ranks) {
-			r.result = -1
-		})
+	return Result{
+		result: game.left.Apply(functor).compareRanks(game.right.Apply(functor)),
 	}
-	return r
 }
 
 type Game struct {
