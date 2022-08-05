@@ -141,6 +141,12 @@ func (h Hand) FullHouse(f func(ranks Ranks)) {
 	})
 }
 
+func (h Hand) Flush(f func(ranks Ranks)) {
+	if h.flush == 5 {
+		f(h.ranks)
+	}
+}
+
 type Result struct {
 	result int
 }
@@ -174,6 +180,7 @@ func (h Hand) Wins(other Hand) bool {
 	return Result{result: 0}.
 		Rule(h, other, Hand.FourOfAKind).
 		Rule(h, other, Hand.FullHouse).
+		Rule(h, other, Hand.Flush).
 		Rule(h, other, Hand.Straight).
 		Rule(h, other, Hand.ThreeOfAKind).
 		Rule(h, other, Hand.TwoPairs).
@@ -182,7 +189,7 @@ func (h Hand) Wins(other Hand) bool {
 }
 
 func Player1Win(game string) bool {
-	h1 := CreateHand(game[0:13])
+	h1 := CreateHand(game[0:14])
 	h2 := CreateHand(game[15:])
 	return h1.Wins(h2)
 }
