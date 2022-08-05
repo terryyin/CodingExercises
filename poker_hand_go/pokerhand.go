@@ -43,8 +43,8 @@ type Ranks struct {
 	ranks []Rank
 }
 
-func (c Ranks) pairThen(f func(index int, p Rank))  {
-	for i := 0; i < len(c.ranks) - 1; i++ {
+func (c Ranks) pairThen(f func(index int, p Rank)) {
+	for i := 0; i < len(c.ranks)-1; i++ {
 		if c.ranks[i].comp(c.ranks[i+1]) == 0 {
 			f(i, c.ranks[i])
 			break
@@ -52,8 +52,12 @@ func (c Ranks) pairThen(f func(index int, p Rank))  {
 	}
 }
 
-func (c Ranks) PairThen(f func(ranks Ranks))  {
-	c.pairThen(func(i int, p Rank) { f(Ranks{ranks: []Rank{p}}) })
+func (c Ranks) PairThen() Ranks {
+	ranks := []Rank{}
+	c.pairThen(func(i int, p Rank) {
+		ranks = append(ranks, p)
+	})
+	return Ranks{ranks: ranks}
 }
 
 func (c Ranks) TwoPairsThen(f func(ranks Ranks)) {
@@ -67,14 +71,21 @@ func (c Ranks) TwoPairsThen(f func(ranks Ranks)) {
 	})
 }
 
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
 func (c Ranks) compareRanks(other Ranks) int {
-	for i, card := range c.ranks {
-		if card.comp(other.ranks[i]) == 0 {
+	for i := 0; i < min(len(c.ranks), len(other.ranks)); i++ {
+		if c.ranks[i].comp(other.ranks[i]) == 0 {
 			continue
 		}
-		return card.comp(other.ranks[i])
+		return c.ranks[i].comp(other.ranks[i])
 	}
-	return 0
+	return len(c.ranks) - len(other.ranks)
 }
 
 type Hand struct {
@@ -82,14 +93,14 @@ type Hand struct {
 }
 
 func CreateHand(cardsString string) Hand {
-	cards := []Rank{}
+	ranks := []Rank{}
 	for _, c := range strings.Split(cardsString, " ") {
-		cards = append(cards, RankOfCard(c))
+		ranks = append(ranks, RankOfCard(c))
 	}
-	sort.Slice(cards, func(i, j int) bool {
-		return cards[i].comp(cards[j]) > 0
+	sort.Slice(ranks, func(i, j int) bool {
+		return ranks[i].comp(ranks[j]) > 0
 	})
-	return Hand{cards: Ranks{ranks: cards}}
+	return Hand{cards: Ranks{ranks: ranks}}
 }
 
 func (h Hand) Wins(other Hand) bool {
@@ -101,19 +112,16 @@ func (h Hand) Wins(other Hand) bool {
 		})
 	})
 
-	if(result != 0) {
+	if result != 0 {
 		return result > 0
 	}
 
+	leftPairs := h.cards.PairThen()
+	rightPairs := other.cards.PairThen()
 
-	h.cards.PairThen(func(left Ranks) {
-		result = 1
-		other.cards.PairThen(func(right Ranks) {
-			result = left.compareRanks(right)
-		}) 
-	}) 
+	result = leftPairs.compareRanks(rightPairs)
 
-	if(result != 0) {
+	if result != 0 {
 		return result > 0
 	}
 

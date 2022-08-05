@@ -41,9 +41,14 @@ func Test_PokerHand(t *testing.T) {
 		assertWin(game(handWithOnePairOf("8"), leastPowerfulHighCardWithHighest("AD")))
 	})
 
+	t.Run("lose by high card vs one pair", func(t *testing.T) {
+		assertNotWin(game( leastPowerfulHighCardWithHighest("AD"), handWithOnePairOf("2")))
+	})
+
 	t.Run("one pair vs one pair", func(t *testing.T) {
 		assertNotWin(game(handWithOnePairOf("2"), handWithOnePairOf("3")))
 		assertWin(game(handWithOnePairOf("3"), handWithOnePairOf("2")))
+		assertWin(game("2H 2C 3D 4S AC", "2H 2C 3D 4S 5D"))
 	})
 
 	t.Run("two pairs vs one pair", func(t *testing.T) {
