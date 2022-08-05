@@ -35,82 +35,69 @@ func (r Rank) comp(other Rank) int {
 	return int(r - other)
 }
 
-type Card struct {
-	rank Rank
+func RankOfCard(card string) Rank {
+	return Rank(strings.Index("23456789TJQKA", string(card[0])))
 }
 
-func CreateCard(card string) Card {
-	rank := Rank(strings.Index("23456789TJQKA", string(card[0])))
-	return Card{rank: rank}
+type Ranks struct {
+	ranks []Rank
 }
 
-func (c Card) comp(other Card) int {
-	return c.rank.comp(other.rank)
-}
-
-type Cards struct {
-	cards []Card
-}
-
-func (c Cards) pairThen(f func(index int, p Rank))  {
-	for i := 0; i < len(c.cards) - 1; i++ {
-		if c.cards[i].comp(c.cards[i+1]) == 0 {
-			f(i, c.cards[i].rank)
+func (c Ranks) pairThen(f func(index int, p Rank))  {
+	for i := 0; i < len(c.ranks) - 1; i++ {
+		if c.ranks[i].comp(c.ranks[i+1]) == 0 {
+			f(i, c.ranks[i])
 			break
 		}
 	}
 }
 
-func (c Cards) PairThen(f func(p Rank))  {
-	c.pairThen(func(i int, p Rank) { f(p) })
+func (c Ranks) PairThen(f func(ranks Ranks))  {
+	c.pairThen(func(i int, p Rank) { f(Ranks{ranks: []Rank{p}}) })
 }
 
-func (c Cards) TwoPairsThen(f func(low Rank, high Rank)) {
+func (c Ranks) TwoPairsThen(f func(ranks Ranks)) {
 	c.pairThen(func(i int, high Rank) {
-		r := []Card{}
-		r = append(r, c.cards[:i]...)
-		remnent := Cards{cards: append(r, c.cards[i+2:]...)}
+		r := []Rank{}
+		r = append(r, c.ranks[:i]...)
+		remnent := Ranks{ranks: append(r, c.ranks[i+2:]...)}
 		remnent.pairThen(func(_ int, low Rank) {
-			f(low, high)
+			f(Ranks{ranks: []Rank{low, high}})
 		})
 	})
 }
 
-func (c Cards) compHighCards(other Cards) int {
-	for i, card := range c.cards {
-		if card.comp(other.cards[i]) == 0 {
+func (c Ranks) compareRanks(other Ranks) int {
+	for i, card := range c.ranks {
+		if card.comp(other.ranks[i]) == 0 {
 			continue
 		}
-		return card.comp(other.cards[i])
+		return card.comp(other.ranks[i])
 	}
 	return 0
 }
 
 type Hand struct {
-	cards Cards
+	cards Ranks
 }
 
 func CreateHand(cardsString string) Hand {
-	cards := []Card{}
+	cards := []Rank{}
 	for _, c := range strings.Split(cardsString, " ") {
-		cards = append(cards, CreateCard(c))
+		cards = append(cards, RankOfCard(c))
 	}
 	sort.Slice(cards, func(i, j int) bool {
 		return cards[i].comp(cards[j]) > 0
 	})
-	return Hand{cards: Cards{cards: cards}}
+	return Hand{cards: Ranks{ranks: cards}}
 }
 
 func (h Hand) Wins(other Hand) bool {
 	result := 0
-	h.cards.TwoPairsThen(func(low Rank, high Rank) {
+	h.cards.TwoPairsThen(func(left Ranks) {
 		result = 1
-		other.cards.TwoPairsThen(func(olow Rank, ohigh Rank) {
-			if (high.comp(ohigh) ==0) {
-				result = low.comp(olow)
-			} else {
-				result = high.comp(ohigh)
-			}
+		other.cards.TwoPairsThen(func(right Ranks) {
+			result = left.compareRanks(right)
 		})
 	})
 
@@ -119,10 +106,10 @@ func (h Hand) Wins(other Hand) bool {
 	}
 
 
-	h.cards.PairThen(func(p Rank) {
+	h.cards.PairThen(func(left Ranks) {
 		result = 1
-		other.cards.PairThen(func(o Rank) {
-			result = p.comp(o)
+		other.cards.PairThen(func(right Ranks) {
+			result = left.compareRanks(right)
 		}) 
 	}) 
 
@@ -130,7 +117,7 @@ func (h Hand) Wins(other Hand) bool {
 		return result > 0
 	}
 
-	return h.cards.compHighCards(other.cards) > 0
+	return h.cards.compareRanks(other.cards) > 0
 }
 
 func Player1Win(game string) bool {
