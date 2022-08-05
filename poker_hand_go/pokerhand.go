@@ -170,18 +170,7 @@ func (h Hand) Apply(functor func(hand Hand, f func(r Ranks))) Ranks {
 	return result
 }
 
-type Result struct {
-	result int
-}
-
-func (r Result) Rule(game Game, functor func(hand Hand, f func(r Ranks))) Result {
-	if r.result != 0 {
-		return r
-	}
-	return Result{
-		result: game.left.Apply(functor).compareRanks(game.right.Apply(functor)),
-	}
-}
+type Rule func(hand Hand, f func(r Ranks))
 
 type Game struct {
 	left  Hand
@@ -194,15 +183,32 @@ func CreateGame(game string) Game {
 		right: CreateHand(game[15:]),
 	}
 }
+
+func (g Game) Rule(functor Rule) int {
+	left := g.left.Apply(functor)
+	right := g.right.Apply(functor)
+	return left.compareRanks(right)
+}
+
+func (g Game) Exec(rules []Rule) int {
+	for _, l := range rules {
+		result := g.Rule(l)
+		if result != 0 {
+			return result
+		}
+	}
+	return 0
+}
+
 func (g Game) Compare() int {
-	return Result{result: 0}.
-		Rule(g, Hand.StraightFlush).
-		Rule(g, Hand.FourOfAKind).
-		Rule(g, Hand.FullHouse).
-		Rule(g, Hand.Flush).
-		Rule(g, Hand.Straight).
-		Rule(g, Hand.ThreeOfAKind).
-		Rule(g, Hand.TwoPairs).
-		Rule(g, Hand.OnePair).
-		Rule(g, Hand.All).result
+	return g.Exec([]Rule{
+		Hand.StraightFlush,
+		Hand.FourOfAKind,
+		Hand.FullHouse,
+		Hand.Flush,
+		Hand.Straight,
+		Hand.ThreeOfAKind,
+		Hand.TwoPairs,
+		Hand.OnePair,
+		Hand.All})
 }
