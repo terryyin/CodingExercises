@@ -174,7 +174,7 @@ type Game struct {
 	right Hand
 }
 
-func (g Game) Exec(rules ...Rule) int {
+func (g Game) compareWithRules(rules ...Rule) int {
 	for _, rule := range rules {
 		result := rule.Apply(g)
 		if result != 0 {
@@ -185,7 +185,7 @@ func (g Game) Exec(rules ...Rule) int {
 }
 
 func (g Game) Compare() int {
-	return g.Exec(
+	return g.compareWithRules(
 		Hand.StraightFlush,
 		Hand.FourOfAKind,
 		Hand.FullHouse,
