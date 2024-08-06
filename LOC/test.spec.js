@@ -1,13 +1,17 @@
 const { linesOfCode } = require("./loc");
 
-const factors_inner = (n, current_factor) => {
-  if (n === 1) return [];
-  if (n % current_factor === 0) return [current_factor, ...factors_inner(n/current_factor, current_factor)];
-  return factors_inner(n, current_factor + 1);
-}
-
 const factors = (n) => {
-  return factors_inner(n, 2);
+  var current_factor = 2;
+  const factors = [];
+  while (n > 1) {
+    if (n % current_factor === 0) {
+      factors.push(current_factor);
+      n /= current_factor;
+    } else {
+      current_factor++;
+    }
+  }
+  return factors;
 }
 
 describe("Test", () => {
@@ -68,6 +72,9 @@ describe("Test", () => {
     expect(factors(123456).length).toEqual(8);
   });
   it("9 has prime factors 3 and 3", () => {
-    expect(factors(1234567).length).toEqual(8);
+    expect(factors(1234567).length).toEqual(2);
+  });
+  it("9 has prime factors 3 and 3", () => {
+    expect(factors(123456789010).length).toEqual(2);
   });
 });
