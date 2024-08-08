@@ -1,18 +1,34 @@
 const { linesOfCode } = require("./loc");
 
 const factors = (n) => {
-  var current_factor = 2;
   const factors = [];
-  while (n > 1) {
-    if (n % current_factor === 0) {
+  
+  // Handle factor 2 separately
+  while (n % 2 === 0) {
+    factors.push(2);
+    n /= 2;
+  }
+  
+  // Check for odd factors from 3 onwards
+  let current_factor = 3;
+  const sqrtN = Math.sqrt(n);
+  while (current_factor <= sqrtN) {
+    while (n % current_factor === 0) {
       factors.push(current_factor);
       n /= current_factor;
-    } else {
-      current_factor++;
     }
+    current_factor += 2;
   }
+  
+  // If n is still greater than 1, then n is a prime number
+  if (n > 1) {
+    factors.push(n);
+  }
+  
   return factors;
 }
+
+module.exports = { factors };
 
 describe("Test", () => {
   it("counts an empty file as 0 LOC", () => {
@@ -75,6 +91,6 @@ describe("Test", () => {
     expect(factors(1234567).length).toEqual(2);
   });
   it("9 has prime factors 3 and 3", () => {
-    expect(factors(123456789010).length).toEqual(2);
+    expect(factors(1234567890123456789977).length).toEqual(2);
   });
 });

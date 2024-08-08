@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Minesweeper</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Minesweeper Polygon</h1>
+    <div id="minesweeper"></div>
+    <canvas id="minesweeperCanvas" width="400" height="400"></canvas>
+  </body>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('minesweeperCanvas');
+    const ctx = canvas.getContext('2d');
+  
+    const rows = 10;
+    const cols = 10;
+    const cellSize = 40;
+  
+    function drawGrid() {
+      for (let i = 0; i <= rows; i++) {
+        ctx.moveTo(0, i * cellSize);
+        ctx.lineTo(cols * cellSize, i * cellSize);
+      }
+  
+      for (let j = 0; j <= cols; j++) {
+        ctx.moveTo(j * cellSize, 0);
+        ctx.lineTo(j * cellSize, rows * cellSize);
+      }
+  
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+    }
+  
+    drawGrid();
+  });
+  </script>
+</html>
+
+  
